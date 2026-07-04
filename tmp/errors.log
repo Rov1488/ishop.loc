@@ -4154,3 +4154,13 @@
 -------------------------
 [2023-10-28 08:18:21] Текст ошибки: SQLSTATE[01000]: Warning: 1265 Data truncated for column 'status' at row 1 | Файл: C:\OSPanel\domains\ishop.loc\vendor\gabordemooij\redbean\RedBeanPHP\Driver\RPDO.php | Сторка: 206
 -------------------------
+[2026-05-15 16:58:59] Текст ошибки: Нет соединения с БД | Файл: C:\OSPanel\home\ishop.loc\vendor\ishop\core\Db.php | Сторка: 20
+-------------------------
+[2026-05-15 17:01:29] Текст ошибки: Нет соединения с БД | Файл: C:\OSPanel\home\ishop.loc\vendor\ishop\core\Db.php | Сторка: 20
+-------------------------
+[2026-05-15 17:01:36] Текст ошибки: Нет соединения с БД | Файл: C:\OSPanel\home\ishop.loc\vendor\ishop\core\Db.php | Сторка: 20
+-------------------------
+[2026-07-05 00:50:06] Текст ошибки: Метод app\controllers\UserController::loginAdminAction не найден | Файл: C:\OSPanel\home\ishop.loc\vendor\ishop\core\Router.php | Сторка: 41
+-------------------------
+[2026-07-05 00:50:07] Текст ошибки: Метод app\controllers\UserController::loginAdminAction не найден | Файл: C:\OSPanel\home\ishop.loc\vendor\ishop\core\Router.php | Сторка: 41
+-------------------------

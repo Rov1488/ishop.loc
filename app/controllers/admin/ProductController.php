@@ -64,7 +64,40 @@ class ProductController extends AppController{
                 \R::store($p);
                 $product->editFilter($id, $data);
                 $product->editRelatedProduct($id, $data);
-                $product->editModificationProduct($id);
+                $product->editModificationProduct($id, $data);
+
+                $_SESSION['success'] = 'Товар добавлен';
+            }
+            redirect();
+        }
+
+        $this->setMeta('Новый товар');
+    }
+
+
+    public function addTestAction(){
+        if(!empty($_POST)){
+            $product = new Product();
+            $data = $_POST;
+            $product->load($data);
+            $product->attributes['status'] = $product->attributes['status'] ? '1' : '0';
+            $product->attributes['hit'] = $product->attributes['hit'] ? '1' : '0';
+            $product->getImg();
+            if(!$product->validate($data)){
+                $product->getErrors();
+                $_SESSION['form_data'] = $data;
+                redirect();
+            }
+
+            if($id = $product->save('product')){
+                $product->saveGallery($id);
+                $alias = AppModel::createAlias('product', 'alias', $data['title'], $id);
+                $p = \R::load('product', $id);
+                $p->alias = $alias;
+                \R::store($p);
+                $product->editFilter($id, $data);
+                $product->editRelatedProduct($id, $data);
+                $product->saveOrUpdateModifications($id, $data);
 
                 $_SESSION['success'] = 'Товар добавлен';
             }
@@ -93,6 +126,7 @@ class ProductController extends AppController{
                 $product->editFilter($id, $data);
                 $product->editRelatedProduct($id, $data);
                 $product->saveGallery($id);
+                $product->editModificationProduct($id, $data);
                 $alias = AppModel::createAlias('product', 'alias', $data['title'], $id);
                 $product = \R::load('product', $id);
                 $product->alias = $alias;
@@ -140,20 +174,19 @@ class ProductController extends AppController{
             }
         }
         echo json_encode($data);
-        die;
+        exit;
     }
 
     //Метод удаление добавленых мофификаторов товара
     public function deleteModificationAction(){
-        $id = $id = isset($_POST['id']) ? $_POST['id'] : null;
+        $id = isset($_POST['id']) ? $_POST['id'] : null;
         $title = isset($_POST['mod-title']) ? $_POST['mod-title'] : null;
         $price = isset($_POST['mod-price']) ? $_POST['mod-price'] : null;
         if (!$id || !$title || !$price){
             return;
-        }else{
-            \R::exec("DELETE FROM modification WHERE product_id = ? ", [$id, $title, $price]);
-            return;
         }
+        \R::exec("DELETE FROM modification WHERE product_id = ? AND title = ? AND price = ?", [$id, $title, $price]);
+        return;
 
     }
 
@@ -182,18 +215,16 @@ class ProductController extends AppController{
         \R::exec("DELETE FROM attribute_product WHERE product_id = ? ", [$id]);
         \R::exec("DELETE FROM modification WHERE product_id = ? ", [$id]);
         $gallery = \R::getAll('SELECT img FROM gallery WHERE product_id = ?', [$id]);
-             if (!empty($gallery->img)){
-                 foreach ($gallery as $item){
-                     $filename = $item->img;
-                 }
-                 @unlink(WWW . "/images/$filename");
-                 exit();
-             }
+        if (!empty($gallery)){
+            foreach ($gallery as $item){
+                @unlink(WWW . '/images/' . $item['img']);
+            }
+        }
 
         \R::exec("DELETE FROM gallery WHERE product_id = ?", [$id]);
 
-              $_SESSION['success'] = 'Товар и связонный все товары успешно удалены';
-            redirect(ADMIN . 'product');
+        $_SESSION['success'] = 'Товар и связонный все товары успешно удалены';
+        redirect(ADMIN . 'product');
 
     }
 

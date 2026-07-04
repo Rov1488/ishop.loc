@@ -42,60 +42,61 @@ class Product extends AppModel{
     ];
 
     //Метод для записи мофификаторов
-    public function editModificationProduct($id){
-        /*$data = [
-          '1' => [
-               [
-                  'product_id' => 12,
-                  'title' => 'Name modification1',
-                  'price' => 100,
-              ],
-              '2' => [
-                  'product_id' => 12,
-                  'title' => 'Name modification2',
-                  'price' => 105,
-              ],
-
-          ]
-        ];*/
-
-        if(!empty($_SESSION['mod-title']) && !empty($_SESSION['mod-price'])){
-            $mods = '';
-            foreach($_SESSION['mod-title'] as $value){
-                $title = $value;
+    public function editModificationProduct($id, $data){
+        $modifications = [];
+        if(!empty($data['mod']['title']) && is_array($data['mod']['title'])){
+            foreach($data['mod']['title'] as $key => $title){
+                $title = trim($title);
+                $price = isset($data['mod']['price'][$key]) ? trim($data['mod']['price'][$key]) : '';
+                if ($title === '' || $price === ''){
+                    continue;
+                }
+                $price = str_replace(',', '.', $price);
+                $modifications[] = [
+                    'product_id' => $id,
+                    'title' => $title,
+                    'price' => $price,
+                ];
             }
-            foreach ($_SESSION['mod-price'] as $value){
-                $price = $value;
-            }
-            $mods .= "($id, $title, $price),";
-            $mods = rtrim($mods, ',');
-            unset($_SESSION['mod-title']);
-            unset($_SESSION['mod-price']);
-        }
-
-        $modification_product = \R::getCol('SELECT id FROM modification WHERE product_id = ?', [$id]);
-
-        //если менеджер убрал модификатор товаров - удаляем их
-        if (empty($mods) && !empty($modification_product)){
-            \R::exec("DELETE FROM modification WHERE product_id = ?", [$id]);
-            return;
-        }
-
-        //если добавляются новый мофификаторов
-        if(!empty($mods)){
-            \R::exec("INSERT INTO modification (product_id, title, price) VALUES $mods");
-            return;
-        }
-
-        //если изменились мофификаторов товаров - удалим и запишем новые
-        if (!empty($mods)){
-            $result = array_diff($modification_product, $mods);
-            if (!empty($result) || count($modification_product) != count($mods)){
-                \R::exec("DELETE FROM modification WHERE product_id = ?", [$id]);
-                \R::exec("INSERT INTO modification (product_id, title, price) VALUES $mods");
-                return;
+        } elseif(!empty($data['mod']) && is_array($data['mod'])) {
+            foreach($data['mod'] as $item){
+                if(empty($item['title']) || empty($item['price'])){
+                    continue;
+                }
+                $title = trim($item['title']);
+                $price = str_replace(',', '.', trim($item['price']));
+                if ($title === '' || $price === ''){
+                    continue;
+                }
+                $modifications[] = [
+                    'product_id' => $id,
+                    'title' => $title,
+                    'price' => $price,
+                ];
             }
         }
+
+        \R::exec("DELETE FROM modification WHERE product_id = ?", [$id]);
+
+        if (!empty($modifications)){
+            $values = [];
+            $placeholders = [];
+            foreach ($modifications as $mod){
+                $placeholders[] = '(?, ?, ?)';
+                $values[] = $mod['product_id'];
+                $values[] = $mod['title'];
+                $values[] = $mod['price'];
+            }
+            \R::exec(
+                "INSERT INTO modification (product_id, title, price) VALUES " . implode(', ', $placeholders),
+                $values
+            );
+        }
+    }
+
+    // CHatGPT метод для записи модификаторов товара
+    public function saveOrUpdateModifications($id, array $data) {
+        $this->editModificationProduct($id, $data);
     }
 
 

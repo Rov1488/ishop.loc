@@ -11,7 +11,10 @@ class App
     public static $app;
     public function __construct()
     {
-       $query = trim($_SERVER['QUERY_STRING'], '/');
+         // Prefer the REQUEST_URI path when available so routing works
+         // with nginx try_files (which doesn't necessarily populate QUERY_STRING).
+         $requestUri = $_SERVER['REQUEST_URI'] ?? '';
+         $query = trim(parse_url($requestUri, PHP_URL_PATH), '/');
        session_start();
        self::$app = Registry::instance();
        $this->getParams();

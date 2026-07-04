@@ -88,7 +88,7 @@ $('body').on('click', '.add-to-cart-link', function(e){
         }
     });
 });
-
+//удаление товара из корзины
 $('#cart .modal-body').on('click', '.del-item', function () {
     var id = $(this).data('id');
     $.ajax({

@@ -19,7 +19,7 @@
                     <div class="box-body">
                         <div class="form-group has-feedback">
                             <label for="title">Наименование товара</label>
-                            <input type="text" name="title" class="form-control" id="title" placeholder="Наименование товара" value="<?php isset($_SESSION['form_data']['title']) ? h($_SESSION['form_data']['title']) : null; ?>" required>
+                            <input type="text" name="title" class="form-control" id="title" placeholder="Наименование товара" value="<?= h($_SESSION['form_data']['title'] ?? '') ?>" required>
                             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                         </div>
                         <div class="form-group">
@@ -40,29 +40,29 @@
 
                         <div class="form-group">
                             <label for="keywords">Ключевые слова</label>
-                            <input type="text" name="keywords" class="form-control" id="keywords" placeholder="Ключевые слова" value="<?php isset($_SESSION['form_data']['keywords']) ? h($_SESSION['form_data']['keywords']) : null; ?>">
+                            <input type="text" name="keywords" class="form-control" id="keywords" placeholder="Ключевые слова" value="<?= h($_SESSION['form_data']['keywords'] ?? '') ?>">
                         </div>
 
                         <div class="form-group">
                             <label for="description">Описание</label>
-                            <input type="text" name="description" class="form-control" id="description" placeholder="Описание" value="<?php isset($_SESSION['form_data']['description']) ? h($_SESSION['form_data']['description']) : null; ?>">
+                            <input type="text" name="description" class="form-control" id="description" placeholder="Описание" value="<?= h($_SESSION['form_data']['description'] ?? '') ?>">
                         </div>
 
                         <div class="form-group has-feedback">
                             <label for="price">Цена</label>
-                            <input type="text" name="price" class="form-control" id="price" placeholder="Цена" pattern="^[0-9.]{1,}$" value="<?php isset($_SESSION['form_data']['price']) ? h($_SESSION['form_data']['price']) : null; ?>" required data-error="Допускаются цифры и десятичная точка">
+                            <input type="text" name="price" class="form-control" id="price" placeholder="Цена" pattern="^[0-9.]{1,}$" value="<?= h($_SESSION['form_data']['price'] ?? '') ?>" required data-error="Допускаются цифры и десятичная точка">
                             <div class="help-block with-errors"></div>
                         </div>
 
                         <div class="form-group has-feedback">
                             <label for="old_price">Старая цена</label>
-                            <input type="medium" name="old_price" class="form-control" id="old_price" placeholder="Цена" pattern="^[0-9.]{1,}$" value="<?php isset($_SESSION['form_data']['old_price']) ? h($_SESSION['form_data']['old_price']) : null; ?>" data-error="Допускаются цифры и десятичная точка">
+                            <input type="text" name="old_price" class="form-control" id="old_price" placeholder="Цена" pattern="^[0-9.]{1,}$" value="<?= h($_SESSION['form_data']['old_price'] ?? '') ?>" data-error="Допускаются цифры и десятичная точка">
                             <div class="help-block with-errors"></div>
                         </div>
 
                         <div class="form-group has-feedback">
                             <label for="content">Контент</label>
-                            <textarea name="content" id="editor1" cols="80" rows="10"><?php isset($_SESSION['form_data']['content']) ? $_SESSION['form_data']['content'] : 0; ?></textarea>
+                            <textarea name="content" id="editor1" cols="80" rows="10"><?= h($_SESSION['form_data']['content'] ?? '') ?></textarea>
                         </div>
 
                         <div class="form-group">
@@ -97,9 +97,9 @@
 
                                     <div id="collapse1" name="mod[]" class="form-group panel-collapse collapse">
                                         <label for="mod-title">Наименование модификатора</label>
-                                        <p><input type="text" name="mod[][title][]" class="form-control" id="mod-title" data-name="mod-title" placeholder="Наименование модификатора" value=""></p>
+                                        <p><input type="text" name="mod[title][]" class="form-control" id="mod-title" data-name="mod-title" placeholder="Наименование модификатора" value=""></p>
                                         <label for="mod-price">Цена</label>
-                                        <p><input type="text" name="mod[][price][]" class="form-control" id="mod-price" data-name="mod-price" placeholder="Цена" pattern="^[0-9.]{1,}$" value=""></p>
+                                        <p><input type="text" name="mod[price][]" class="form-control" id="mod-price" data-name="mod-price" placeholder="Цена" pattern="^[0-9.]{1,}$" value=""></p>
 
                                     </div>
                                 </div>

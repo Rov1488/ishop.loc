@@ -152,9 +152,9 @@ function addField() {
         '<button id="modButton" type="button" onclick="deleteFiled('+telnum+')" class="btn btn-danger btn-sm pull-right" title="Удалить Модификатор товара"><i class="fa fa-trash"></i></button></div>' +
         '<div id="collapse'+telnum+'" class="form-group panel-collapse collapse">' +
         '<label for="mod-title">Наименование модификатора</label>' +
-        '<p><input type="text" name="mod[title]" class="form-control" id="mod-title" data-name="mod-title" placeholder="Наименование модификатора" value=""></p>' +
+        '<p><input type="text" name="mod[title][]" class="form-control" id="mod-title" data-name="mod-title" placeholder="Наименование модификатора" value=""></p>' +
         '<label for="mod-price">Цена</label>' +
-        '<p><input type="text" name="mod[price]" class="form-control" id="mod-price" data-name="mod-price" placeholder="Цена" pattern="^[0-9.]{1,}$" value=""></p></div></div>');
+        '<p><input type="text" name="mod[price][]" class="form-control" id="mod-price" data-name="mod-price" placeholder="Цена" pattern="^[0-9.]{1,}$" value=""></p></div></div>');
 
 
     for (var i = 0; i < telnum; i++){
@@ -171,13 +171,13 @@ function addField() {
 }
 
 function deleteFiled(id) {
-   var title = $('div #addmod'+id).find('#mod-title').val(),
+   let title = $('div #addmod'+id).find('#mod-title').val(),
        price = $('div #addmod'+id).find('#mod-price').val(),
        jsondata = [title, price];
-   if($('div #addmod'+id+'#collapse'+id+' input[type=text]').val() == null){
-       $('div #addmod'+id).remove();
-   }else{
-        for(var i = 0; i < jsondata; i++){
+   if ($.trim($('div #addmod' + id + ' #collapse' + id + ' input[type=text]').val()) === '') {
+        $('div #addmod' + id).remove();
+    }else{
+        for(let i = 0; i < jsondata.length; i++){
             jsondata[i];
 
         $.ajax({
@@ -196,7 +196,51 @@ function deleteFiled(id) {
     }
 }
 
+let modIndex = 1;
 
+function addFieldTest() {
+    modIndex++;
+    const newMod = `
+        <div id="addmod${modIndex}" class="addMod panel box box-primary">
+            <div class="box-header with-border">
+                <h4 class="box-title">
+                    <a data-toggle="collapse" data-parent="#add_mod_area" href="#collapse${modIndex}" aria-expanded="false" class="collapsed">Модификатор товара №${modIndex}</a>
+                </h4>
+                <button type="button" onclick="deleteFiled(${modIndex});" class="btn btn-danger btn-sm pull-right" title="Удалить Модификатор товара"><i class="fa fa-trash"></i></button>
+            </div>
+            <div id="collapse${modIndex}" class="form-group panel-collapse collapse">
+                <label for="mod-title-${modIndex}">Наименование модификатора</label>
+                <p><input type="text" name="mod[${modIndex}][title]" class="form-control" id="mod-title-${modIndex}" placeholder="Наименование модификатора"></p>
+                <label for="mod-price-${modIndex}">Цена</label>
+                <p><input type="text" name="mod[${modIndex}][price]" class="form-control" id="mod-price-${modIndex}" placeholder="Цена" pattern="^[0-9.]+$"></p>
+            </div>
+        </div>
+    `;
+    $('#add_mod_area').append(newMod);
+}
+
+function deleteFiledTest(id) {
+    const modElement = $(`#addmod${id}`);
+    if ($.trim(modElement.find('input[type="text"]').val()) === '') {
+        modElement.remove();
+    } else {
+        const jsondata = {
+            title: modElement.find('#mod-title-' + id).val(),
+            price: modElement.find('#mod-price-' + id).val(),
+        };
+        $.ajax({
+            url: adminpath + '/product/delete-modification',
+            data: jsondata,
+            type: 'POST',
+            success: function() {
+                modElement.remove();
+            },
+            error: function() {
+                alert('Ошибка удаления модификатора.');
+            },
+        });
+    }
+}
 
 
 
