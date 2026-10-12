@@ -42,6 +42,7 @@ JOIN `order_product` ON `order`.`id` = `order_product`.`order_id` GROUP BY `orde
 
     //Метод для изменения статуса заказа
     public function changeAction(){
+        $this->requirePost();
         $order_id = $this->getRequestID();
         $status = !empty($_GET['status']) ? '1' : '0';
         $order = \R::load('order', $order_id);
@@ -58,6 +59,7 @@ JOIN `order_product` ON `order`.`id` = `order_product`.`order_id` GROUP BY `orde
     }
     //Метод для удаления заказа
     public function deleteAction(){
+        $this->requirePost();
         $order_id = $this->getRequestID();
         \R::exec('DELETE FROM order_product WHERE order_id = ?', [$order_id]);
         \R::exec('DELETE FROM `order` WHERE id = ?', [$order_id]);

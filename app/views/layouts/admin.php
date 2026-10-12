@@ -598,7 +598,8 @@
 
 <script>
     var path = '<?=PATH;?>',
-        adminpath = '<?=ADMIN;?>';
+        adminpath = '<?=ADMIN;?>',
+        csrf = '<?=csrf_token();?>';
 </script>
 
 

@@ -13,6 +13,7 @@ class CacheController extends AppController{
         $this->setMeta('Очистка кэша');
     }
     public function deleteAction(){
+        $this->requirePost();
         $key = isset($_GET['key']) ? $_GET['key'] : null;
         $cache = Cache::instance();
         switch ($key){

@@ -16,6 +16,7 @@
         <div class="col-md-12">
             <div class="box">
                 <form action="<?=ADMIN;?>/product/add" method="post" data-toggle="validator" id="add">
+                    <?=csrf_field();?>
                     <div class="box-body">
                         <div class="form-group has-feedback">
                             <label for="title">Наименование товара</label>

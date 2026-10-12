@@ -27,3 +27,22 @@ function redirect($http = false){
 function h($str){
     return htmlspecialchars((string)$str, ENT_QUOTES);
 }
+
+//CSRF-токен: один на сессию, передаётся с каждым POST-запросом
+function csrf_token(){
+    if (empty($_SESSION['_csrf'])){
+        $_SESSION['_csrf'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['_csrf'];
+}
+
+//Скрытое поле с токеном для форм
+function csrf_field(){
+    return '<input type="hidden" name="_csrf" value="' . csrf_token() . '">';
+}
+
+//Проверка токена из поля формы или заголовка X-CSRF-Token (AJAX)
+function csrf_check(){
+    $token = $_POST['_csrf'] ?? ($_SERVER['HTTP_X_CSRF_TOKEN'] ?? '');
+    return is_string($token) && !empty($_SESSION['_csrf']) && hash_equals($_SESSION['_csrf'], $token);
+}

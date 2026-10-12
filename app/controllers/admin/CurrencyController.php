@@ -61,6 +61,7 @@ class CurrencyController extends AppController{
 
     //Метод для удаления валюты
     public function deleteAction(){
+        $this->requirePost();
         $id = $this->getRequestID();
         $currency = \R::load('currency', $id);
         \R::trash($currency);

@@ -17,6 +17,7 @@
         <div class="col-md-12">
             <div class="box">
                 <form action="<?=ADMIN?>/filter/group-edit" method="post" data-toggle="validator">
+                    <?=csrf_field();?>
                     <div class="box-body">
                         <div class="form-group has-feedback">
                             <label for="title">Наименование группы</label>

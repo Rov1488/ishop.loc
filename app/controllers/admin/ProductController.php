@@ -179,6 +179,7 @@ class ProductController extends AppController{
 
     //Метод удаления продуктов
     public function deleteAction(){
+        $this->requirePost();
         $id = $this->getRequestID();
         \R::exec("DELETE FROM product WHERE id = ? ", [$id]);
         \R::exec("DELETE FROM related_product WHERE product_id = ? ", [$id]);

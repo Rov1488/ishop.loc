@@ -27,6 +27,7 @@ class FilterController extends AppController{
 
     //Метод для удаление группы фильтров
     public function groupDeleteAction(){
+        $this->requirePost();
         $id = $this->getRequestID();
         $count = \R::count('attribute_value', 'attr_group_id = ?', [$id]);
         if ($count){
@@ -133,6 +134,7 @@ class FilterController extends AppController{
 
     //Метод для удаление атрибут
     public function attributeDeleteAction(){
+        $this->requirePost();
         $id = $this->getRequestID();
         \R::exec("DELETE FROM attribute_product WHERE attr_id = ?", [$id]);
         \R::exec('DELETE FROM attribute_value WHERE id = ?', [$id]);

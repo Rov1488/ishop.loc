@@ -90,6 +90,7 @@ WHERE user_id = ? GROUP  BY `order`.`id` ORDER BY `order`.`status`, `order`.`id`
 
     //Метод для удаления пользователя
     public function deleteAction(){
+        $this->requirePost();
         $user_id = $this->getRequestID();
         if ($user_id == $_SESSION['user']['id']){
             $_SESSION['error'] = 'Нельзя удалить свою учётную запись';

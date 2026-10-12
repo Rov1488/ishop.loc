@@ -18,6 +18,7 @@ class CategoryController extends AppController{
 
     //Метод для удаления категории
     public function deleteAction(){
+        $this->requirePost();
         $id =$this->getRequestID();
         $children = \R::count('category', 'parent_id = ?', [$id]);
         $errors = '';

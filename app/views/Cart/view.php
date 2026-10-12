@@ -55,6 +55,7 @@
                         </div>
                         <div class="col-md-6 account-left">
                             <form method="post" action="cart/checkout" role="form" data-toggle="validator">
+                                <?=csrf_field();?>
                                 <?php if(!isset($_SESSION['user'])): ?>
                                     <div class="form-group has-feedback">
                                         <label for="login">Login</label>

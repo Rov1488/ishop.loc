@@ -23,6 +23,7 @@
                     <div class="register-main">
                         <div class="col-md-6 account-left">
                             <form method="post" action="user/login" id="login" role="form" data-toggle="validator">
+                                <?=csrf_field();?>
                                 <div class="form-group has-feedback">
                                     <label for="login">Login</label>
                                     <input type="text" name="login" class="form-control" id="login" placeholder="Login" required>

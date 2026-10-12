@@ -3,9 +3,9 @@
     <h1>
         Заказ №<?=$order['id'];?>
         <?php if (!$order['status']): ?>
-            <a href="<?=ADMIN;?>/order/change?id=<?=$order['id'];?>&status=1" class="btn btn-success btn-xs">Одобрить</a>
+            <a href="<?=ADMIN;?>/order/change?id=<?=$order['id'];?>&status=1" class="btn post-link btn-success btn-xs">Одобрить</a>
         <?php else: ?>
-            <a href="<?=ADMIN;?>/order/change?id=<?=$order['id'];?>&status=0" class="btn btn-default btn-xs">Вернуть на доработку</a>
+            <a href="<?=ADMIN;?>/order/change?id=<?=$order['id'];?>&status=0" class="btn post-link btn-default btn-xs">Вернуть на доработку</a>
         <?php endif; ?>
         <a href="<?=ADMIN;?>/order/delete?id=<?=$order['id'];?>" class="btn btn-danger btn-xs delete">Удалить</a>
     </h1>

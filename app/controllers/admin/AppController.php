@@ -33,6 +33,14 @@ class AppController extends Controller{
         Cache::instance()->delete('filter_attrs');
     }
 
+    //Действия, меняющие данные (удаление, смена статуса), принимаем только через POST:
+    //тогда их защищает CSRF-токен, который App проверяет у каждого POST-запроса
+    protected function requirePost(){
+        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST'){
+            throw new \Exception('Действие доступно только через POST-запрос', 405);
+        }
+    }
+
     public function getRequestID($get = true, $id = 'id'){
         if($get){
             $data = $_GET;

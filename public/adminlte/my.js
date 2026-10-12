@@ -1,9 +1,17 @@
 //CKEDITOR.replace('editor1');
 $('#editor1').ckeditor();
 
-$('.delete').click(function () {
-    var res = confirm('Подтвердите действие');
-    if(!res) return false;
+//CSRF: токен уходит заголовком со всеми AJAX-запросами
+$.ajaxSetup({headers: {'X-CSRF-Token': csrf}});
+
+//Ссылки удаления (.delete) и смены статуса (.post-link) отправляем POST-формой с токеном:
+//сервер не принимает такие действия через GET
+$(document).on('click', 'a.delete, a.post-link', function (e) {
+    e.preventDefault();
+    if($(this).hasClass('delete') && !confirm('Подтвердите действие')) return;
+    $('<form method="post">').attr('action', this.href)
+        .append($('<input type="hidden" name="_csrf">').val(csrf))
+        .appendTo('body').submit();
 });
 
 //подключения стили при выборе категории в сайдбаре
@@ -86,7 +94,7 @@ function initUploader(button, insert){
     var overlay = button.closest('.file-upload').find('.overlay');
     new AjaxUpload(button, {
         action: url + "?upload=1",
-        data: {name: button.data('name')},
+        data: {name: button.data('name'), _csrf: csrf},
         name: button.data('name'),
         onSubmit: function(file, ext){
             if (! (ext && /^(jpg|png|jpeg|gif)$/i.test(ext))){

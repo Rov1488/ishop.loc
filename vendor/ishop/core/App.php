@@ -19,6 +19,10 @@ class App
        session_start(['cookie_httponly' => true, 'cookie_samesite' => 'Lax']);
        self::$app = Registry::instance();
        $this->getParams();
+       // любой POST (формы, AJAX, загрузка картинок) должен прийти с CSRF-токеном
+       if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && !csrf_check()){
+           throw new \Exception('Неверный CSRF-токен. Обновите страницу и повторите действие', 403);
+       }
        Router::dispatch($query);
     }
 
