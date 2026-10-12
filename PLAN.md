@@ -55,7 +55,8 @@
 
 Осталось:
 
-- ⬜ Вынести общий код `addAction`/`editAction` товара (нормализация `status`/`hit`, `load → getImg → validate`) в метод модели.
+- ✅ Общий код `addAction`/`editAction` товара вынесен в `admin\Product::loadForm()` (загрузка, `status`/`hit`, картинка, проверка) и `saveRelations()` (галерея, alias, фильтры, связанные товары, модификации).
+- ✅ **Запись в ENUM-колонки** (`product.status`/`hit`, `order.status`, `currency.base`). RedBean передавал `'0'`/`'1'` как числа, а MySQL понимает число в ENUM как номер элемента: `1` сохранялось как `'0'`, `0` давало ошибку `Data truncated`. Из-за этого не сохранялись товары и не работала кнопка «Одобрить» у заказа. В `Db.php` включена привязка параметров строками (`setUseStringOnlyBinding`).
 - ⬜ Перенести ядро из `vendor/ishop/core` в `core/` (папку `vendor` должен контролировать composer) и убрать `vendor/` из git (`composer install` при развёртывании).
 - ✅ RedBean зафиксирован на `~5.7.6` вместо `dev-master`. Заодно исправлено хранение в git: раньше `vendor/gabordemooij/redbean` был записан ссылкой на вложенный репозиторий (gitlink), и в клоне с GitHub папка была пустой. Теперь в git лежат файлы пакета.
 - ✅ Список валют кэшируется на час (`AppController::cacheCurrencies`, ключ `currencies`), админка сбрасывает кэш при добавлении, изменении и удалении валюты.

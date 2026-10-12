@@ -34,6 +34,37 @@ class Product extends AppModel{
         ],
     ];
 
+    //Загружает и проверяет данные формы товара (общая часть добавления и редактирования).
+    //При ошибке пишет её в сессию, возвращает загруженную картинку в сессию и возвращает false
+    public function loadForm(array $data){
+        $this->load($data);
+        // колонки status и hit — ENUM('0','1'): нужны строки. Число MySQL понимает как номер элемента
+        // (1 -> '0', 0 -> ошибка "Data truncated")
+        $this->attributes['status'] = !empty($this->attributes['status']) ? '1' : '0';
+        $this->attributes['hit'] = !empty($this->attributes['hit']) ? '1' : '0';
+        $this->getImg();
+        if (!$this->validate($data)){
+            $this->getErrors();
+            if (!empty($this->attributes['img'])){
+                $_SESSION['single'] = $this->attributes['img'];
+            }
+            return false;
+        }
+        return true;
+    }
+
+    //Сохраняет всё, что связано с товаром, после записи в таблицу product:
+    //галерею, alias, фильтры, связанные товары и модификации
+    public function saveRelations($id, array $data){
+        $this->saveGallery($id);
+        $product = \R::load('product', $id);
+        $product->alias = self::createAlias('product', 'alias', $data['title'], $id);
+        \R::store($product);
+        $this->editFilter($id, $data);
+        $this->editRelatedProduct($id, $data);
+        $this->editModificationProduct($id, $data);
+    }
+
     //Метод для записи мофификаторов
     public function editModificationProduct($id, $data){
         $modifications = [];

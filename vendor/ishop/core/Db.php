@@ -22,6 +22,11 @@ class Db{
         //Данная команда зомараживаеть внесение изменения в БД
         \R::freeze(true);
 
+        //Параметры запросов передаём строками. Иначе RedBean отправляет '0'/'1' как числа, а MySQL
+        //понимает число в ENUM('0','1') как номер элемента: 1 сохраняется как '0', 0 даёт ошибку
+        //"Data truncated" (product.status/hit, order.status, currency.base)
+        \R::getDatabaseAdapter()->getDatabase()->setUseStringOnlyBinding(true);
+
         //Включаем режим отклатки
         if(DEBUG){
             \R::debug(true, 1);

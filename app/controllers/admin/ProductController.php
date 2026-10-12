@@ -6,7 +6,6 @@
 namespace app\controllers\admin;
 
 use app\models\admin\Product;
-use app\models\AppModel;
 use ishop\App;
 use ishop\libs\Pagination;
 
@@ -49,27 +48,12 @@ class ProductController extends AppController{
         if(!empty($_POST)){
             $product = new Product();
             $data = $_POST;
-            $product->load($data);
-            $product->attributes['status'] = !empty($product->attributes['status']) ? 1 : 0;
-            $product->attributes['hit'] = !empty($product->attributes['hit']) ? 1 : 0;
-            $product->getImg();
-            if(!$product->validate($data)){
-                $product->getErrors();
-                if (!empty($product->attributes['img'])) $_SESSION['single'] = $product->attributes['img'];
+            if(!$product->loadForm($data)){
                 $_SESSION['form_data'] = $data;
                 redirect();
             }
-
             if($id = $product->save('product')){
-                $product->saveGallery($id);
-                $alias = AppModel::createAlias('product', 'alias', $data['title'], $id);
-                $p = \R::load('product', $id);
-                $p->alias = $alias;
-                \R::store($p);
-                $product->editFilter($id, $data);
-                $product->editRelatedProduct($id, $data);
-                $product->editModificationProduct($id, $data);
-
+                $product->saveRelations($id, $data);
                 $_SESSION['success'] = 'Товар добавлен';
             }
             redirect();
@@ -85,13 +69,7 @@ class ProductController extends AppController{
             $id = $this->getRequestID(false);
             $product = new Product();
             $data = $_POST;
-            $product->load($data);
-            $product->attributes['status'] = !empty($product->attributes['status']) ? 1 : 0;
-            $product->attributes['hit'] = !empty($product->attributes['hit']) ? 1 : 0;
-            $product->getImg();
-            if(!$product->validate($data)){
-                $product->getErrors();
-                if (!empty($product->attributes['img'])) $_SESSION['single'] = $product->attributes['img'];
+            if(!$product->loadForm($data)){
                 redirect();
             }
             $old_img = \R::getCell('SELECT img FROM product WHERE id = ?', [$id]);
@@ -101,14 +79,7 @@ class ProductController extends AppController{
                 if ($new_img && $new_img !== $old_img){
                     Product::deleteImage($old_img);
                 }
-                $product->editFilter($id, $data);
-                $product->editRelatedProduct($id, $data);
-                $product->saveGallery($id);
-                $product->editModificationProduct($id, $data);
-                $alias = AppModel::createAlias('product', 'alias', $data['title'], $id);
-                $product = \R::load('product', $id);
-                $product->alias = $alias;
-                \R::store($product);
+                $product->saveRelations($id, $data);
                 $_SESSION['success'] = 'Изменение успешно сохранены';
                 redirect();
             }
