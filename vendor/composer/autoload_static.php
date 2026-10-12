@@ -11,6 +11,7 @@ class ComposerStaticInitb212cdbff2e615ad4bfca0d8229f8c33
         '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
         'f598d06aa772fa33d905e87be6398fb1' => __DIR__ . '/..' . '/symfony/polyfill-intl-idn/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '27607da90c0b29080ee5416aeb37e4d6' => __DIR__ . '/..' . '/gabordemooij/redbean/RedBeanPHP/Functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (

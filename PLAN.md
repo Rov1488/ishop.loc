@@ -57,7 +57,7 @@
 
 - ⬜ Вынести общий код `addAction`/`editAction` товара (нормализация `status`/`hit`, `load → getImg → validate`) в метод модели.
 - ⬜ Перенести ядро из `vendor/ishop/core` в `core/` (папку `vendor` должен контролировать composer) и убрать `vendor/` из git (`composer install` при развёртывании).
-- ⬜ `composer.json`: зафиксировать `gabordemooij/redbean` вместо `dev-master`.
+- ✅ RedBean зафиксирован на `~5.7.6` вместо `dev-master`. Заодно исправлено хранение в git: раньше `vendor/gabordemooij/redbean` был записан ссылкой на вложенный репозиторий (gitlink), и в клоне с GitHub папка была пустой. Теперь в git лежат файлы пакета.
 - ✅ Список валют кэшируется на час (`AppController::cacheCurrencies`, ключ `currencies`), админка сбрасывает кэш при добавлении, изменении и удалении валюты.
 - ✅ `DEBUG` вынесен в `config/params.local.php` (`'debug' => 1`). Без этой настройки `DEBUG = 0`, поэтому на сервере ошибки не показываются посетителям. Шаблон файла — `config/params.local.example.php`.
 

@@ -3,7 +3,7 @@
         'name' => '__root__',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '0b29601783674f9a23a65b7357c63d4cb2f525c4',
+        'reference' => '52aec4fedb135681ff3ee93539975f19e16a9a23',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         '__root__' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '0b29601783674f9a23a65b7357c63d4cb2f525c4',
+            'reference' => '52aec4fedb135681ff3ee93539975f19e16a9a23',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -38,14 +38,12 @@
             'dev_requirement' => false,
         ),
         'gabordemooij/redbean' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => '274c426583d91b20a1e39968b2e20969ef83cd1d',
+            'pretty_version' => 'v5.7.6',
+            'version' => '5.7.6.0',
+            'reference' => '5d678eba2d1e1ad203bc19c35b3c0d50b560a26c',
             'type' => 'library',
             'install_path' => __DIR__ . '/../gabordemooij/redbean',
-            'aliases' => array(
-                0 => '9999999-dev',
-            ),
+            'aliases' => array(),
             'dev_requirement' => false,
         ),
         'psr/container' => array(

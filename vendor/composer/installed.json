@@ -150,27 +150,29 @@
         },
         {
             "name": "gabordemooij/redbean",
-            "version": "dev-master",
-            "version_normalized": "dev-master",
+            "version": "v5.7.6",
+            "version_normalized": "5.7.6.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gabordemooij/redbean.git",
-                "reference": "274c426583d91b20a1e39968b2e20969ef83cd1d"
+                "reference": "5d678eba2d1e1ad203bc19c35b3c0d50b560a26c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/gabordemooij/redbean/zipball/274c426583d91b20a1e39968b2e20969ef83cd1d",
-                "reference": "274c426583d91b20a1e39968b2e20969ef83cd1d",
+                "url": "https://api.github.com/repos/gabordemooij/redbean/zipball/5d678eba2d1e1ad203bc19c35b3c0d50b560a26c",
+                "reference": "5d678eba2d1e1ad203bc19c35b3c0d50b560a26c",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.4"
             },
-            "time": "2023-03-17T22:39:19+00:00",
-            "default-branch": true,
+            "time": "2026-04-30T15:47:40+00:00",
             "type": "library",
-            "installation-source": "source",
+            "installation-source": "dist",
             "autoload": {
+                "files": [
+                    "RedBeanPHP/Functions.php"
+                ],
                 "psr-4": {
                     "RedBeanPHP\\": "RedBeanPHP"
                 }
@@ -193,7 +195,7 @@
             ],
             "support": {
                 "issues": "https://github.com/gabordemooij/redbean/issues",
-                "source": "https://github.com/gabordemooij/redbean/tree/v5.7.4"
+                "source": "https://github.com/gabordemooij/redbean/tree/v5.7.6"
             },
             "install-path": "../gabordemooij/redbean"
         },
