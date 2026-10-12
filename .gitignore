@@ -1,5 +1,7 @@
-tmp/errors.log
-tmp/cache/*.txt
+/tmp/*
+!/tmp/cache/
+/tmp/cache/*
+!/tmp/cache/.gitkeep
 config/params.local.php
 .idea/workspace.xml
 .idea/dataSources.local.xml
