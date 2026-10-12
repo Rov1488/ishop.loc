@@ -47,7 +47,7 @@
 - ✅ **Почта.** `swiftmailer` заменён на `symfony/mailer` 7.4 (`Order::mailOrder`). В `composer.json` зафиксирована платформа PHP 8.2, чтобы composer (работает на PHP 8.5) подбирал версии под сервер.
 - ✅ **Обработчик ошибок.** Deprecated-сообщения из сторонних библиотек в `vendor/` не выводятся на страницу и не ломают редиректы; все ошибки пишутся в `tmp/errors.log`.
 - ✅ **Конфигурация.** Секреты вынесены в `config/params.local.php`, который `App::getParams` подмешивает к `params.php`.
-- ✅ **Git.** `tmp/` (кэш и лог ошибок) убран из репозитория, папка `tmp/cache` сохраняется через `.gitkeep`.
+- ✅ **Git.** `tmp/` (кэш и лог ошибок) и `.idea/` (настройки PhpStorm) убраны из репозитория, папка `tmp/cache` сохраняется через `.gitkeep`.
 
 Осталось:
 
@@ -55,7 +55,6 @@
 - ⬜ Вынести общий код `addAction`/`editAction` товара (нормализация `status`/`hit`, `load → getImg → validate`) в метод модели.
 - ⬜ Перенести ядро из `vendor/ishop/core` в `core/` (папку `vendor` должен контролировать composer) и убрать `vendor/` из git (`composer install` при развёртывании).
 - ⬜ `composer.json`: зафиксировать `gabordemooij/redbean` вместо `dev-master`.
-- ⬜ Убрать из git `.idea/workspace.xml`, `.idea/dataSources.local.xml` (`git rm --cached`, правила уже в `.gitignore`).
 - ⬜ Удалить остатки вёрстки: `luxury_watches-web/`, `public/products.html`, `public/single.html`, `config_nginx.txt`, `filters.txt`.
 - ⬜ Кэшировать список валют (сейчас запрос к БД на каждой странице в `AppController`).
 - ⬜ `DEBUG` вынести в `params.local.php`, чтобы на сервере не нужно было править код.
