@@ -13,6 +13,7 @@ use app\models\User;
 class CartController extends AppController{
 
     public function addAction(){
+        $this->requirePost();
         $id = !empty($_GET['id']) ? (int)$_GET['id'] : null;
         $qty = !empty($_GET['qty']) ? max(1, (int)$_GET['qty']) : 1;
         $mod_id = !empty($_GET['mod']) ? (int)$_GET['mod'] : null;
@@ -47,6 +48,7 @@ class CartController extends AppController{
 
     //Метод для удаления из модального окна корзины
     public function deleteAction(){
+        $this->requirePost();
         $id = !empty($_GET['id']) ? $_GET['id'] : null;
         if(isset($_SESSION['cart'][$id])){
             $cart = new Cart();
@@ -61,6 +63,7 @@ class CartController extends AppController{
 
     //Метод очистки модального окно
     public function clearAction(){
+        $this->requirePost();
         unset($_SESSION['cart']);
         unset($_SESSION['cart.qty']);
         unset($_SESSION['cart.sum']);

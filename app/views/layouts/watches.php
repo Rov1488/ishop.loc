@@ -48,7 +48,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <ul class="dropdown-menu">
                             <?php if (!empty($_SESSION['user'])): ?>
                             <li><a href="#">Добро пожаловать, <?=h($_SESSION['user']['name']);?></a> </li>
-                            <li><a href="user/logout">Выход</a> </li>
+                            <li><a href="user/logout" class="post-link">Выход</a> </li>
                             <?php else:?>
                                 <li><a href="user/login">Вход</a> </li>
                                 <li><a href="user/signup">Регистрация</a> </li>
@@ -257,7 +257,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
         // json_encode даёт безопасную JS-строку (кавычки и теги экранируются)
         course = <?=json_encode($curr['value'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);?>,
         symboleLeft = <?=json_encode($curr['symbol_left'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);?>,
-        symboleRight = <?=json_encode($curr['symbol_right'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);?>;
+        symboleRight = <?=json_encode($curr['symbol_right'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);?>,
+        csrf = '<?=csrf_token();?>';
 
 
 </script>

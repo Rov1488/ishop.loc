@@ -1,3 +1,21 @@
+/*CSRF начало*/
+//токен уходит заголовком со всеми AJAX-запросами
+$.ajaxSetup({headers: {'X-CSRF-Token': csrf}});
+
+//отправка POST-формы с токеном: действия, меняющие данные, сервер принимает только через POST
+function postTo(url){
+    $('<form method="post">').attr('action', url)
+        .append($('<input type="hidden" name="_csrf">').val(csrf))
+        .appendTo('body').submit();
+}
+
+//ссылки .post-link (выход, удаление на странице корзины) отправляем POST-формой
+$(document).on('click', 'a.post-link', function(e){
+    e.preventDefault();
+    postTo(this.href);
+});
+/*CSRF конец*/
+
 /*FILTERS begin*/
 //delegirovaniya
 $('body').on('change', '.w_sidebar input', function () {
@@ -77,9 +95,8 @@ $('body').on('click', '.add-to-cart-link', function(e){
         qty = $('.quantity input').val() ? $('.quantity input').val() : 1,
         mod = $('.available select').val();
     $.ajax({
-        url: '/cart/add',
-        data: {id: id, qty: qty, mod: mod},
-        type: 'GET',
+        url: '/cart/add?' + $.param({id: id, qty: qty, mod: mod}),
+        type: 'POST',
         success: function(res){
             showCart(res);
         },
@@ -92,9 +109,8 @@ $('body').on('click', '.add-to-cart-link', function(e){
 $('#cart .modal-body').on('click', '.del-item', function () {
     var id = $(this).data('id');
     $.ajax({
-        url: '/cart/delete',
-        data: {id: id},
-        type: 'GET',
+        url: '/cart/delete?' + $.param({id: id}),
+        type: 'POST',
         success: function (res) {
             showCart(res);
         },
@@ -117,7 +133,7 @@ function showCart(cart){
 
 //Проверка сумму в корзине
     if($('.cart-sum').text()){
-    $('.simpleCart_total').html($('#cart .cart-sum').text());
+    $('.simpleCart_total').text($('#cart .cart-sum').text());
 } else{
         $('.simpleCart_total').text('Empty Cart');
     }
@@ -138,7 +154,7 @@ function getCart() {
 function clearCart() {
     $.ajax({
         url: '/cart/clear',
-        type: 'GET',
+        type: 'POST',
         success: function(res){
             showCart(res);
         },
@@ -153,7 +169,7 @@ function clearCart() {
 
 /*Выбор валют начало*/
 $('#currency').change(function(){
-    window.location = 'currency/change?curr=' + $(this).val();
+    postTo('currency/change?curr=' + encodeURIComponent($(this).val()));
 });
 
 $('.available select').on('change', function(){

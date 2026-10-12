@@ -11,6 +11,7 @@ use app\models\Cart;
 class CurrencyController extends AppController {
 
     public function changeAction(){
+        $this->requirePost();
         $currency = !empty($_GET['curr']) ? $_GET['curr'] : null;
         if($currency){
             $curr =\R::findOne('currency', 'code = ?', [$currency]);

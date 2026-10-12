@@ -49,6 +49,14 @@ abstract class Controller{
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
     }
 
+    //Действия, меняющие данные (удаление, корзина, выход и т.п.), принимаем только через POST:
+    //тогда их защищает CSRF-токен, который App проверяет у каждого POST-запроса
+    protected function requirePost(){
+        if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST'){
+            throw new \Exception('Действие доступно только через POST-запрос', 405);
+        }
+    }
+
     //Метод для загрузки нужнего вида по Ajax запроса
     public function loadView($view, $vars = []){
         extract($vars);

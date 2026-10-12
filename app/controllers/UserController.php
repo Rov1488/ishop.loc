@@ -55,6 +55,7 @@ class UserController extends AppController{
 
     //Метод для выхода пользователя
     public function logoutAction(){
+        $this->requirePost();
         if (isset($_SESSION['user'])) unset($_SESSION['user']);
         redirect();
     }
