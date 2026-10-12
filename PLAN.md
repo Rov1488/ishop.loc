@@ -12,7 +12,7 @@
 - ✅ **Фиксация сессии.** После входа вызывается `session_regenerate_id(true)`; cookie сессии `HttpOnly` и `SameSite=Lax`.
 - ✅ **Открытый редирект.** `redirect()` возвращает на `HTTP_REFERER` только в пределах своего домена.
 - ✅ **Пароль SMTP.** Вынесен в `config/params.local.php` (в `.gitignore`).
-- ⬜ **Сменить пароль приложения Gmail.** Старый пароль остался в истории git, его нужно отозвать в аккаунте Google и записать новый в `config/params.local.php`.
+- ✅ **Пароль приложения Gmail заменён.** Новый хранится только в `config/params.local.php`, в `params.php` пусто. Старый пароль остался в истории git, но отозван.
 - ⬜ **CSRF.** Удаление (товаров, заказов, пользователей, категорий) идёт GET-запросами без токена. Нужно: удаление только через POST и CSRF-токен в сессии + скрытое поле во всех формах админки.
 - ⬜ **Хранимый XSS.** Названия товаров и категорий выводятся без `h()` (`Product/view.php`, `Breadcrumbs`, меню). Данные вводит только админ, но экранировать стоит.
 - ⬜ **Неиспользуемый код в `public/`.** Удалить `public/adminlte/bower_components/kcfinder` и примеры CKEditor (`samples/`): KCFinder в проекте не подключён.
@@ -37,17 +37,30 @@
 
 ## 3. Оптимизация и чистка кода
 
+Сделано:
+
+- ✅ **Загрузчик картинок (`my.js`).** Два одинаковых блока по ~50 строк для `#single` и `#multi` заменены одной функцией `initUploader(button, insert)`. Убраны мёртвые ветки разбора ответа и `window.open` для отладки.
+- ✅ **Ответ загрузки (`admin\Product::jsonExit`).** Шесть копий `ob_end_clean(); echo json_encode(); exit;` в `uploadImg` и ещё одна в `ProductController::addImageAction` заменены одним методом.
+- ✅ **Связи товара (`admin\Product::replaceLinks`).** `editFilter` и `editRelatedProduct` (~70 строк с тремя ветками и ручной сборкой SQL) сведены к одному общему методу: удалить старые связи, вставить новые одним запросом.
+- ✅ **Массовые вставки одним запросом с плейсхолдерами:** товары заказа, галерея, фильтры, связанные товары.
+- ✅ **Сброс кэша.** Методы `clearCategoryCache()` / `clearFilterCache()` в `admin\AppController` вызываются после изменений, ручная очистка через «Кэш» больше не нужна.
+- ✅ **Почта.** `swiftmailer` заменён на `symfony/mailer` 7.4 (`Order::mailOrder`). В `composer.json` зафиксирована платформа PHP 8.2, чтобы composer (работает на PHP 8.5) подбирал версии под сервер.
+- ✅ **Обработчик ошибок.** Deprecated-сообщения из сторонних библиотек в `vendor/` не выводятся на страницу и не ломают редиректы; все ошибки пишутся в `tmp/errors.log`.
+- ✅ **Конфигурация.** Секреты вынесены в `config/params.local.php`, который `App::getParams` подмешивает к `params.php`.
+- ✅ **Git.** `tmp/` (кэш и лог ошибок) убран из репозитория, папка `tmp/cache` сохраняется через `.gitkeep`.
+
+Осталось:
+
 - ⬜ Убрать тестовый дубль `addTestAction` + `views/admin/Product/addTest.php` и обёртку `saveOrUpdateModifications`, неиспользуемое свойство `$modification`.
 - ⬜ Вынести общий код `addAction`/`editAction` товара (нормализация `status`/`hit`, `load → getImg → validate`) в метод модели.
 - ⬜ Перенести ядро из `vendor/ishop/core` в `core/` (папку `vendor` должен контролировать composer) и убрать `vendor/` из git (`composer install` при развёртывании).
-- ✅ `swiftmailer` заменён на `symfony/mailer` 7.4 (`Order::mailOrder`). В `composer.json` зафиксирована платформа PHP 8.2, чтобы composer (работает на PHP 8.5) подбирал версии под сервер.
 - ⬜ `composer.json`: зафиксировать `gabordemooij/redbean` вместо `dev-master`.
-- ⬜ Убрать из git `tmp/cache`, `tmp/errors.log`, `.idea/workspace.xml`, `.idea/dataSources.local.xml` (`git rm --cached`, правила уже в `.gitignore`).
+- ⬜ Убрать из git `.idea/workspace.xml`, `.idea/dataSources.local.xml` (`git rm --cached`, правила уже в `.gitignore`).
 - ⬜ Удалить остатки вёрстки: `luxury_watches-web/`, `public/products.html`, `public/single.html`, `config_nginx.txt`, `filters.txt`.
 - ⬜ Кэшировать список валют (сейчас запрос к БД на каждой странице в `AppController`).
 - ⬜ `DEBUG` вынести в `params.local.php`, чтобы на сервере не нужно было править код.
 
 ## 4. Окружение OSPanel
 
-- ⬜ В `.osp/project.ini` указать версию PHP явно (`php_engine = PHP-8.2`) и перезапустить OSPanel. Сейчас сгенерированный `nginx.conf` для ishop.loc собран как статический хост без PHP и не содержит правок из `.osp/nginx/ishop.loc.conf`.
-- ⬜ После перезапуска проверить, что IP PHP совпадает с `127.0.1.39` в `ishop.loc.conf` (или заменить на `$backend_ip:$backend_port`, если OSPanel их задаёт).
+- ✅ В `.osp/project.ini` указана версия PHP (`php_engine = PHP-8.2`), OSPanel перезапущен: сгенерированный `nginx.conf` содержит правки из `.osp/nginx/ishop.loc.conf`.
+- ✅ PHP отвечает на `127.0.1.39:9000`, указанном в `ishop.loc.conf`. Если OSPanel сменит IP, сайт начнёт отдавать 502: тогда заменить на `$backend_ip:$backend_port`.
