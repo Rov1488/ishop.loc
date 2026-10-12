@@ -59,7 +59,7 @@
 - ⬜ Перенести ядро из `vendor/ishop/core` в `core/` (папку `vendor` должен контролировать composer) и убрать `vendor/` из git (`composer install` при развёртывании).
 - ⬜ `composer.json`: зафиксировать `gabordemooij/redbean` вместо `dev-master`.
 - ⬜ Кэшировать список валют (сейчас запрос к БД на каждой странице в `AppController`).
-- ⬜ `DEBUG` вынести в `params.local.php`, чтобы на сервере не нужно было править код.
+- ✅ `DEBUG` вынесен в `config/params.local.php` (`'debug' => 1`). Без этой настройки `DEBUG = 0`, поэтому на сервере ошибки не показываются посетителям. Шаблон файла — `config/params.local.example.php`.
 
 ## 4. Окружение OSPanel
 
