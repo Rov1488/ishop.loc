@@ -16,9 +16,11 @@ class UserController extends AppController{
             $user =new User();
             $data = $_POST;
             $user->load($data);
+            $user->attributes['role'] = 'user'; // роль нельзя задать из формы
 
             if (!$user->validate($data) || !$user->checkUnique()){
                $user->getErrors();
+               unset($data['password']); // пароль в сессии не храним
                $_SESSION['form_data'] = $data;
             } else{
                 $user->attributes['password'] = password_hash($user->attributes['password'], PASSWORD_DEFAULT);

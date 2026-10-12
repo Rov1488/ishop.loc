@@ -102,75 +102,28 @@ class Product extends AppModel{
 
     //метод для свянанных товаров
     public function editRelatedProduct($id, $data){
-        $related_product = \R::getCol('SELECT related_id FROM related_product WHERE product_id = ?', [$id]);
-        //если менеджер убрал свянанных товаров - удаляем их
-        if (empty($data['related']) && !empty($related_product)){
-            \R::exec("DELETE FROM related_product WHERE product_id = ?", [$id]);
-            return;
-        }
-
-        //если добавляются свянанные товаров
-        if (empty($related_product) && !empty($data['related'])){
-            $sql_part = '';
-            foreach ($data['related'] as $v){
-                $v = (int)$v;
-                $sql_part .= "($id, $v),";
-            }
-            $sql_part = rtrim($sql_part, ',');
-            \R::exec("INSERT INTO related_product (product_id, related_id) VALUES $sql_part");
-            return;
-        }
-
-        //если изменились свянанные товаров - удалим и запишем новые
-        if (!empty($data['related'])){
-            $result = array_diff($related_product, $data['related']);
-            if (!empty($result) || count($related_product) != count($data['related'])){
-                \R::exec("DELETE FROM related_product WHERE product_id = ?", [$id]);
-                $sql_part = '';
-                foreach ($data['related'] as $v){
-                    $sql_part .= "($id, $v),";
-                }
-                $sql_part = rtrim($sql_part, ',');
-                \R::exec("INSERT INTO related_product (product_id, related_id) VALUES $sql_part");
-                return;
-            }
-        }
-
+        self::replaceLinks('related_product', 'product_id', 'related_id', $id, $data['related'] ?? []);
     }
 
     //Метод для добавления, управления фильтрами и атрибутами
     public function editFilter($id, $data){
-        $filter = \R::getCol('SELECT attr_id FROM attribute_product WHERE product_id = ?', [$id]);
-        //если менеджер убрал фильтер - удаляем их
-        if (empty($data['attrs']) && !empty($filter)){
-            \R::exec("DELETE FROM attribute_product WHERE product_id = ?", [$id]);
-            return;
-        }
-        //если фильтры добавляются
-        if (empty($filter) && !empty($data['attrs'])){
-            $sql_part = '';
-            foreach ($data['attrs'] as $v){
-                $sql_part .= "($v, $id),";
-            }
-            $sql_part = rtrim($sql_part, ',');
-            \R::exec("INSERT INTO attribute_product (attr_id, product_id) VALUES $sql_part");
-            return;
-        }
+        self::replaceLinks('attribute_product', 'product_id', 'attr_id', $id, $data['attrs'] ?? []);
+    }
 
-        //если изменились фильтры - удалим и запишем новые
-        if (!empty($data['attrs'])){
-            $result = array_diff($filter, $data['attrs']);
-            if (!$result || count($filter) != count($data['attrs'])){
-                \R::exec("DELETE FROM attribute_product WHERE product_id = ?", [$id]);
-                $sql_part = '';
-                foreach ($data['attrs'] as $v){
-                    $sql_part .= "($v, $id),";
-                }
-                $sql_part = rtrim($sql_part, ',');
-                \R::exec("INSERT INTO attribute_product (attr_id, product_id) VALUES $sql_part");
-                return;
-            }
+    //Перезаписывает связи товара в таблице: удаляет старые и вставляет новые id
+    protected static function replaceLinks($table, $productField, $linkField, $id, $ids){
+        $ids = array_values(array_unique(array_filter(array_map('intval', (array)$ids))));
+        \R::exec("DELETE FROM $table WHERE $productField = ?", [$id]);
+        if (empty($ids)){
+            return;
         }
+        $values = [];
+        foreach ($ids as $v){
+            $values[] = $id;
+            $values[] = $v;
+        }
+        $placeholders = implode(', ', array_fill(0, count($ids), '(?, ?)'));
+        \R::exec("INSERT INTO $table ($productField, $linkField) VALUES $placeholders", $values);
     }
 
 //Метод для записи иконки товара
@@ -184,46 +137,63 @@ class Product extends AppModel{
     //Метод для сохранеие изображение товара в галлерею
     public function saveGallery($id){
         if(!empty($_SESSION['multi'])){
-            $sql_part = '';
+            $values = [];
             foreach($_SESSION['multi'] as $v){
-               $sql_part .= "('$v', '$id'),";
+                $values[] = $v;
+                $values[] = $id;
             }
-            $sql_part = rtrim($sql_part, ',');
-            \R::exec("INSERT INTO gallery (img, product_id) VALUES $sql_part");
+            $placeholders = implode(', ', array_fill(0, count($_SESSION['multi']), '(?, ?)'));
+            \R::exec("INSERT INTO gallery (img, product_id) VALUES $placeholders", $values);
             unset($_SESSION['multi']);
          }
+    }
+
+    //Отдаёт JSON-ответ загрузчику и завершает скрипт.
+    //AjaxUpload читает ответ из iframe, поэтому отдаём text/html и экранируем <, >, & внутри JSON
+    public static function jsonExit(array $data){
+        while (ob_get_level()){
+            ob_end_clean();
+        }
+        header('Content-Type: text/html; charset=utf-8');
+        echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP);
+        exit;
     }
 
     //Метод для загрузки изображение
 
     public function uploadImg($name, $wmax, $hmax){
+        // буферизуем вывод, чтобы notice/warning не испортили JSON
+        ob_start();
         $uploaddir = WWW . '/images/';
-        $ext = strtolower(preg_replace("#.+\.([a-z]+)$#i", "$1", $_FILES[$name]['name'])); // расширение картинки
-        $types = array("image/gif", "image/png", "image/jpeg", "image/pjpeg", "image/x-png"); // массив допустимых расширений
-        if($_FILES[$name]['size'] > 1048576){
-            $res = array("error" => "Ошибка! Максимальный вес файла - 1 Мб!");
-            exit(json_encode($res));
+
+        if (empty($_FILES[$name]['tmp_name'])){
+            self::jsonExit(['error' => 'Файл не загружен']);
         }
         if($_FILES[$name]['error']){
-            $res = array("error" => "Ошибка! Возможно, файл слишком большой.");
-            exit(json_encode($res));
+            self::jsonExit(["error" => "Ошибка! Возможно, файл слишком большой."]);
         }
-        if(!in_array($_FILES[$name]['type'], $types)){
-            $res = array("error" => "Допустимые расширения - .gif, .jpg, .png");
-            exit(json_encode($res));
+        if($_FILES[$name]['size'] > 1048576){
+            self::jsonExit(["error" => "Ошибка! Максимальный вес файла - 1 Мб!"]);
         }
-        $new_name = md5(time()).".$ext";
+        // тип определяем по содержимому файла, а не по данным браузера и имени файла
+        $types = [IMAGETYPE_GIF => 'gif', IMAGETYPE_PNG => 'png', IMAGETYPE_JPEG => 'jpg'];
+        $info = @getimagesize($_FILES[$name]['tmp_name']);
+        if(!$info || !isset($types[$info[2]])){
+            self::jsonExit(["error" => "Допустимые расширения - .gif, .jpg, .png"]);
+        }
+        $ext = $types[$info[2]];
+        $new_name = bin2hex(random_bytes(16)) . ".$ext";
         $uploadfile = $uploaddir.$new_name;
-        if(@move_uploaded_file($_FILES[$name]['tmp_name'], $uploadfile)){
-            if($name == 'single'){
-                $_SESSION['single'] = $new_name;
-            }else{
-                $_SESSION['multi'][] = $new_name;
-            }
-            self::resize($uploadfile, $uploadfile, $wmax, $hmax, $ext);
-            $res = array("file" => $new_name);
-            exit(json_encode($res));
+        if(!move_uploaded_file($_FILES[$name]['tmp_name'], $uploadfile)){
+            self::jsonExit(["error" => "Не удалось переместить загруженный файл."]);
         }
+        if($name == 'single'){
+            $_SESSION['single'] = $new_name;
+        }else{
+            $_SESSION['multi'][] = $new_name;
+        }
+        self::resize($uploadfile, $uploadfile, $wmax, $hmax, $ext);
+        self::jsonExit(["file" => $new_name]);
     }
 
     /**

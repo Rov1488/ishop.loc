@@ -67,7 +67,7 @@
 
                         <div class="form-group">
                             <label>
-                                <input type="checkbox" name="status" checked> Статус
+                                <input type="checkbox" name="status" checked value="1"> Статус
                             </label>
                         </div>
 
@@ -118,7 +118,7 @@
                                         <h3 class="box-title">Базовое изображение</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div id="single" class="btn btn-success" data-url="product/add-image" data-name="single">Выбрать файл</div>
+                                        <div id="single" class="btn btn-success" data-url="/product/add-image" data-name="single">Выбрать файл</div>
                                         <p><small>Рекомендуемые размеры: 125х200</small></p>
 
                                         <div class="single"></div>
@@ -134,7 +134,7 @@
                                         <h3 class="box-title">Картинки галереи</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div id="multi" class="btn btn-success" data-url="product/add-image" data-name="multi">Выбрать файл</div>
+                                        <div id="multi" class="btn btn-success" data-url="/product/add-image" data-name="multi">Выбрать файл</div>
                                         <p><small>Рекомендуемые размеры: 700х1000</small></p>
 
                                         <div class="multi"></div>

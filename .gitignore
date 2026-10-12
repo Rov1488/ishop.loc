@@ -1,0 +1,5 @@
+tmp/errors.log
+tmp/cache/*.txt
+config/params.local.php
+.idea/workspace.xml
+.idea/dataSources.local.xml

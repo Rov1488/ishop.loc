@@ -49,8 +49,9 @@ class User extends AppModel{
     }
 //Метод для проверки логин и пароля пользователя в моделе преред авторизации
     public function login($isAdmin = false){
-        $login = !empty(trim($_POST['login'])) ? trim($_POST['login']) : null;
-        $password = !empty(trim($_POST['password'])) ? trim($_POST['password']) : null;
+        $login = trim($_POST['login'] ?? '');
+        // пароль не обрезаем: при регистрации он хешируется как есть
+        $password = $_POST['password'] ?? '';
         if ($login && $password){
             if ($isAdmin){
                 $user = \R::findOne('user', "login = ? AND role = 'admin'", [$login]);
@@ -59,6 +60,8 @@ class User extends AppModel{
             }
             if ($user){
                 if (password_verify($password, $user->password)){
+                   // новый id сессии после входа защищает от фиксации сессии
+                   session_regenerate_id(true);
                    foreach ($user as $k => $v){
                        if ($k != 'password') $_SESSION['user'][$k] = $v;
                    }

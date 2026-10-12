@@ -12,7 +12,12 @@ function redirect($http = false){
     if($http){
         $redirect = $http;
     } else{
-        $redirect = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : PATH;
+        $redirect = PATH;
+        // возвращаем на предыдущую страницу только в пределах своего сайта
+        $referer = $_SERVER['HTTP_REFERER'] ?? '';
+        if ($referer && parse_url($referer, PHP_URL_HOST) === parse_url(PATH, PHP_URL_HOST)){
+            $redirect = $referer;
+        }
     }
     header("Location: $redirect");
     exit;
@@ -20,5 +25,5 @@ function redirect($http = false){
 
 
 function h($str){
-    return htmlspecialchars($str, ENT_QUOTES);
+    return htmlspecialchars((string)$str, ENT_QUOTES);
 }

@@ -14,11 +14,13 @@ define("CONF", ROOT . '/config');//указываем к папке config
 define("LAYOUT", 'watches'); //константа для подключения шаблона сайта
 
 //http://ishop.loc/public/index.php
-$app_path = "http://{$_SERVER['HTTP_HOST']}{$_SERVER['PHP_SELF']}";
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$app_path = "{$scheme}://{$_SERVER['HTTP_HOST']}{$_SERVER['PHP_SELF']}";
 //http://ishop.loc/public/
 $app_path = preg_replace("#[^/]+$#", '', $app_path);
 //http://ishop.loc
 $app_path = str_replace('/public/', '', $app_path);
+$app_path = rtrim($app_path, '/');
 define("PATH", $app_path);
 define("ADMIN", PATH . '/admin');
 

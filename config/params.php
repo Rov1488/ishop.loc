@@ -10,7 +10,7 @@ return [
     'smtp_port' => '465',
     'smtp_protocol' => 'ssl',
     'smtp_login' => 'r.pulatov1488@gmail.com',
-    'smtp_password' => 'eistgtnhcezzqedb',//old password ovcohtwpifdfguum
+    'smtp_password' => '', // задаётся в config/params.local.php
     'img_width' => '125',
     'img_height' => '200',
     'gallery_width' => '700',

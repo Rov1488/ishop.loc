@@ -14,18 +14,18 @@ class CartController extends AppController{
 
     public function addAction(){
         $id = !empty($_GET['id']) ? (int)$_GET['id'] : null;
-        $qty = !empty($_GET['qty']) ? (int)$_GET['qty'] : null;
+        $qty = !empty($_GET['qty']) ? max(1, (int)$_GET['qty']) : 1;
         $mod_id = !empty($_GET['mod']) ? (int)$_GET['mod'] : null;
         $mod = null;
-        if ($id){
-            $product = \R::findOne('product', 'id = ?', [$id]);
-            if (!$product){
-                return false;
-            }
-            if ($mod_id){
-                $mod = \R::findOne('modification', 'id = ? AND product_id = ?', [$mod_id, $id]);
-            }
-
+        if (!$id){
+            redirect();
+        }
+        $product = \R::findOne('product', "id = ? AND status = '1'", [$id]);
+        if (!$product){
+            redirect();
+        }
+        if ($mod_id){
+            $mod = \R::findOne('modification', 'id = ? AND product_id = ?', [$mod_id, $id]);
         }
         //Создадим объект карточки товара
         $cart = new Cart();
@@ -62,7 +62,7 @@ class CartController extends AppController{
     //Метод очистки модального окно
     public function clearAction(){
         unset($_SESSION['cart']);
-        unset($_SESSION['qty']);
+        unset($_SESSION['cart.qty']);
         unset($_SESSION['cart.sum']);
         unset($_SESSION['cart.currency']);
         $this->loadView('cart_modal');
@@ -75,15 +75,17 @@ class CartController extends AppController{
     }
 
 public function checkoutAction(){
-     if (!empty($_POST)) {
+     if (!empty($_POST) && !empty($_SESSION['cart'])) {
          //регистрация пользователя
         if (!User::checkAuth()){
             $user =new User();
             $data = $_POST;
             $user->load($data);
+            $user->attributes['role'] = 'user'; // роль нельзя задать из формы
 
             if (!$user->validate($data) || !$user->checkUnique()){
                 $user->getErrors();
+                unset($data['password']); // пароль в сессии не храним
                 $_SESSION['form_data'] = $data;
                 redirect();
             } else{
@@ -99,7 +101,7 @@ public function checkoutAction(){
         //сохранения заказа
          $data['user_id'] = isset($user_id) ? $user_id : $_SESSION['user']['id'];
         $data['note'] = !empty($_POST['note']) ? $_POST['note'] : '';
-        $user_email = isset($_SESSION['user']['email']) ? $_SESSION['user']['email'] : $_POST['email'];
+        $user_email = isset($_SESSION['user']['email']) ? $_SESSION['user']['email'] : ($_POST['email'] ?? '');
         $order_id = Order::saveOrder($data);
         Order::mailOrder($order_id, $user_email);
      }

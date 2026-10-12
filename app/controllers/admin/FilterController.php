@@ -34,6 +34,7 @@ class FilterController extends AppController{
             redirect();
         }
         \R::exec('DELETE FROM attribute_group WHERE id = ?', [$id]);
+        $this->clearFilterCache();
         $_SESSION['success'] = 'Удалено';
         redirect();
     }
@@ -49,6 +50,7 @@ class FilterController extends AppController{
                 redirect();
             }
             if($group->save('attribute_group', false)){
+                $this->clearFilterCache();
                 $_SESSION['success'] = 'Группа добавлена';
                 redirect();
             }
@@ -68,6 +70,7 @@ class FilterController extends AppController{
                 redirect();
             }
             if($group->update('attribute_group', $id)){
+                $this->clearFilterCache();
                 $_SESSION['success'] = 'Изменения сохранены';
                 redirect();
             }
@@ -90,6 +93,7 @@ class FilterController extends AppController{
                 redirect();
             }
             if($attr->save('attribute_value', false)){
+                $this->clearFilterCache();
                 $_SESSION['success'] = 'Атрибут добавлен';
                 redirect();
             }
@@ -114,6 +118,7 @@ class FilterController extends AppController{
                 redirect();
             }
             if($attr->update('attribute_value', $id)){
+                $this->clearFilterCache();
                 $_SESSION['success'] = 'Изменения сохранены';
                 redirect();
             }
@@ -131,6 +136,7 @@ class FilterController extends AppController{
         $id = $this->getRequestID();
         \R::exec("DELETE FROM attribute_product WHERE attr_id = ?", [$id]);
         \R::exec('DELETE FROM attribute_value WHERE id = ?', [$id]);
+        $this->clearFilterCache();
         $_SESSION['success'] = 'Удалено';
         redirect();
 

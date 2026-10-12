@@ -8,7 +8,12 @@
   "require": {
     "gabordemooij/redbean": "dev-master",
     "vlucas/valitron": "^1.4",
-    "swiftmailer/swiftmailer": "^6.2"
+    "symfony/mailer": "^7.3"
 
+  },
+  "config": {
+    "platform": {
+      "php": "8.2.0"
+    }
   }
 }

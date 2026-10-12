@@ -28,16 +28,19 @@ class ProductController extends AppController{
     //Метод для загрузки картинок
     public function addImageAction(){
         if(isset($_GET['upload'])){
-            if($_POST['name'] == 'single'){
+            $name = $_POST['name'] ?? null;
+            if($name === 'single'){
                 $wmax = App::$app->getProperty('img_width');
                 $hmax = App::$app->getProperty('img_height');
-            }else{
+            } elseif($name === 'multi'){
                 $wmax = App::$app->getProperty('gallery_width');
                 $hmax = App::$app->getProperty('gallery_height');
+            } else {
+                Product::jsonExit(['error' => 'Invalid upload field name']);
             }
-            $name = $_POST['name'];
             $product = new Product();
             $product->uploadImg($name, $wmax, $hmax);
+            exit;
         }
     }
 
@@ -47,8 +50,8 @@ class ProductController extends AppController{
             $product = new Product();
             $data = $_POST;
             $product->load($data);
-            $product->attributes['status'] = $product->attributes['status'] ? '1' : '0';
-            $product->attributes['hit'] = $product->attributes['hit'] ? '1' : '0';
+            $product->attributes['status'] = !empty($product->attributes['status']) ? 1 : 0;
+            $product->attributes['hit'] = !empty($product->attributes['hit']) ? 1 : 0;
             $product->getImg();
             if(!$product->validate($data)){
                 $product->getErrors();
@@ -80,8 +83,8 @@ class ProductController extends AppController{
             $product = new Product();
             $data = $_POST;
             $product->load($data);
-            $product->attributes['status'] = $product->attributes['status'] ? '1' : '0';
-            $product->attributes['hit'] = $product->attributes['hit'] ? '1' : '0';
+            $product->attributes['status'] = !empty($product->attributes['status']) ? 1 : 0;
+            $product->attributes['hit'] = !empty($product->attributes['hit']) ? 1 : 0;
             $product->getImg();
             if(!$product->validate($data)){
                 $product->getErrors();
@@ -115,8 +118,8 @@ class ProductController extends AppController{
             $product = new Product();
             $data = $_POST;
             $product->load($data);
-            $product->attributes['status'] = $product->attributes['status'] ? '1' : '0';
-            $product->attributes['hit'] = $product->attributes['hit'] ? '1' : '0';
+            $product->attributes['status'] = !empty($product->attributes['status']) ? 1 : 0;
+            $product->attributes['hit'] = !empty($product->attributes['hit']) ? 1 : 0;
             $product->getImg();
             if(!$product->validate($data)){
                 $product->getErrors();
@@ -224,7 +227,7 @@ class ProductController extends AppController{
         \R::exec("DELETE FROM gallery WHERE product_id = ?", [$id]);
 
         $_SESSION['success'] = 'Товар и связонный все товары успешно удалены';
-        redirect(ADMIN . 'product');
+        redirect(ADMIN . '/product');
 
     }
 

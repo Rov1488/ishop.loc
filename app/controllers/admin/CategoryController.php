@@ -34,6 +34,7 @@ class CategoryController extends AppController{
         }
         $category = \R::load('category', $id);
         \R::trash($category);
+        $this->clearCategoryCache();
         $_SESSION['success'] = 'Категория удалена';
         redirect();
     }
@@ -53,6 +54,7 @@ class CategoryController extends AppController{
                 $cat = \R::load('category', $id);
                 $cat->alias = $alias;
                 \R::store($cat);
+                $this->clearCategoryCache();
                 $_SESSION['success'] = 'Категория успешно добавлена';
             }
             redirect();
@@ -76,6 +78,7 @@ class CategoryController extends AppController{
                 $category = \R::load('category', $id);
                 $category->alias = $alias;
                 \R::store($category);
+                $this->clearCategoryCache();
                 $_SESSION['success'] = 'Изменения сохранены';
             }
             redirect();

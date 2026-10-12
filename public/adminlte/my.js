@@ -78,57 +78,44 @@ $('.del-item').on('click', function(){
 });
 
 //Загрузка изображение
-if($('div').is('#single')){
-    var buttonSingle = $("#single"),
-        buttonMulti = $("#multi"),
-        file;
-}
-if(buttonSingle){
-    new AjaxUpload(buttonSingle, {
-        action: adminpath + buttonSingle.data('url') + "?upload=1",
-        data: {name: buttonSingle.data('name')},
-        name: buttonSingle.data('name'),
+//Ответ сервера читаем как текст: при responseType 'json' ajaxupload.js делает eval
+//до вызова onComplete, и ошибка разбора вешает загрузку без сообщения
+function initUploader(button, insert){
+    if(!button.length) return;
+    var url = button.data('url').indexOf('/') === 0 ? adminpath + button.data('url') : adminpath + '/' + button.data('url');
+    var overlay = button.closest('.file-upload').find('.overlay');
+    new AjaxUpload(button, {
+        action: url + "?upload=1",
+        data: {name: button.data('name')},
+        name: button.data('name'),
         onSubmit: function(file, ext){
             if (! (ext && /^(jpg|png|jpeg|gif)$/i.test(ext))){
                 alert('Ошибка! Разрешены только картинки');
                 return false;
             }
-            buttonSingle.closest('.file-upload').find('.overlay').css({'display':'block'});
-
+            overlay.css({'display':'block'});
         },
         onComplete: function(file, response){
-            setTimeout(function(){
-                buttonSingle.closest('.file-upload').find('.overlay').css({'display':'none'});
-
-                response = JSON.parse(response);
-                $('.' + buttonSingle.data('name')).html('<img src="/images/' + response.file + '" style="max-height: 150px;">');
-            }, 1000);
-        }
-    });
-}
-if(buttonMulti){
-    new AjaxUpload(buttonMulti, {
-        action: adminpath + buttonMulti.data('url') + "?upload=1",
-        data: {name: buttonMulti.data('name')},
-        name: buttonMulti.data('name'),
-        onSubmit: function(file, ext){
-            if (! (ext && /^(jpg|png|jpeg|gif)$/i.test(ext))){
-                alert('Ошибка! Разрешены только картинки');
-                return false;
+            overlay.css({'display':'none'});
+            var json;
+            try {
+                // убираем возможную обёртку <pre> и HTML-сущности
+                json = JSON.parse($('<div>').html(response).text().trim());
+            } catch (e) {
+                console.error('Upload response (raw):', response);
+                alert('Не удалось разобрать ответ сервера. Подробности в консоли.');
+                return;
             }
-            buttonMulti.closest('.file-upload').find('.overlay').css({'display':'block'});
-
-        },
-        onComplete: function(file, response){
-            setTimeout(function(){
-                buttonMulti.closest('.file-upload').find('.overlay').css({'display':'none'});
-
-                response = JSON.parse(response);
-                $('.' + buttonMulti.data('name')).append('<img src="/images/' + response.file + '" style="max-height: 150px;">');
-            }, 1000);
+            if (json.file) {
+                insert($('.' + button.data('name')), '<img src="/images/' + json.file + '" style="max-height: 150px;">');
+            } else {
+                alert('Ошибка загрузки: ' + (json.error || 'неизвестная ошибка'));
+            }
         }
     });
 }
+initUploader($('#single'), function(box, img){ box.html(img); });
+initUploader($('#multi'), function(box, img){ box.append(img); });
 
 //Проверка выбранли категории или селектов
 $('#add').on('submit', function () {

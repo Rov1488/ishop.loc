@@ -99,9 +99,10 @@ class Pagination {
         if(isset($url[1]) && $url[1] != ''){
             $params = explode('&', $url[1]);
             foreach($params as $param){
-                if(!preg_match("#page=#", $param)) $uri .= "{$param}&amp;";
+                if(!preg_match("#page=#", $param)) $uri .= urldecode($param) . "&";
             }
         }
-        return urldecode($uri);
+        // параметры из адресной строки выводятся в href, поэтому экранируем их
+        return h($uri);
     }
 }

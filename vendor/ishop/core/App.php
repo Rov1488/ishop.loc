@@ -15,15 +15,19 @@ class App
          // with nginx try_files (which doesn't necessarily populate QUERY_STRING).
          $requestUri = $_SERVER['REQUEST_URI'] ?? '';
          $query = trim(parse_url($requestUri, PHP_URL_PATH), '/');
-       session_start();
+       new ErrorHandler();
+       session_start(['cookie_httponly' => true, 'cookie_samesite' => 'Lax']);
        self::$app = Registry::instance();
        $this->getParams();
-       new ErrorHandler();
        Router::dispatch($query);
     }
 
     protected function getParams(){
         $params = require_once CONF . '/params.php';
+        // секреты (пароли SMTP и т.п.) лежат в params.local.php, который не попадает в git
+        if(is_file(CONF . '/params.local.php')){
+            $params = array_merge($params, require CONF . '/params.local.php');
+        }
         if(!empty($params)){
             foreach ($params as $k => $v){
                 self::$app->setProperty($k, $v);

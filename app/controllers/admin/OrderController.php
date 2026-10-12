@@ -45,7 +45,7 @@ JOIN `order_product` ON `order`.`id` = `order_product`.`order_id` GROUP BY `orde
         $order_id = $this->getRequestID();
         $status = !empty($_GET['status']) ? '1' : '0';
         $order = \R::load('order', $order_id);
-        if(!$order){
+        if(!$order->id){
             throw new \Exception('Страница не найдена', 404);
         }
         $order->status = $status;
@@ -59,13 +59,9 @@ JOIN `order_product` ON `order`.`id` = `order_product`.`order_id` GROUP BY `orde
     //Метод для удаления заказа
     public function deleteAction(){
         $order_id = $this->getRequestID();
-        $order = \R::load('order', $order_id);
-        \R::trash($order);
-        if (isset($order)){
-            $_SESSION['success'] = 'Заказ успешно удалено';
-            redirect(ADMIN . '/order');
-        }else{
-            $_SESSION['error'] = 'Заказ не удалено возникла внутреная ошибка!';
-        }
+        \R::exec('DELETE FROM order_product WHERE order_id = ?', [$order_id]);
+        \R::exec('DELETE FROM `order` WHERE id = ?', [$order_id]);
+        $_SESSION['success'] = 'Заказ успешно удалено';
+        redirect(ADMIN . '/order');
     }
 }

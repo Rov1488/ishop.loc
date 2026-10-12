@@ -615,7 +615,7 @@
 <script src="bower_components/ckeditor/ckeditor.js"></script>
 <script src="bower_components/ckeditor/adapters/jquery.js"></script>
 <script src="bower_components/select2/dist/js/select2.full.js"></script>
-<script src="my.js"></script>
+<script src="/adminlte/my.js"></script>
 
 <?php
 

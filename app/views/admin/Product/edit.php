@@ -97,7 +97,7 @@
                                         <h3 class="box-title">Базовое изображение</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div id="single" class="btn btn-success" data-url="product/add-image" data-name="single">Выбрать файл</div>
+                                        <div id="single" class="btn btn-success" data-url="/product/add-image" data-name="single">Выбрать файл</div>
                                         <p><small>Рекомендуемые размеры: 125х200</small></p>
                                         <div class="single">
                                             <img src="/images/<?=$product->img;?>" alt="" style="max-height: 150px;" class="del-img">
@@ -114,7 +114,7 @@
                                         <h3 class="box-title">Картинки галереи</h3>
                                     </div>
                                     <div class="box-body">
-                                        <div id="multi" class="btn btn-success" data-url="product/add-image" data-name="multi">Выбрать файл</div>
+                                        <div id="multi" class="btn btn-success" data-url="/product/add-image" data-name="multi">Выбрать файл</div>
                                         <p><small>Рекомендуемые размеры: 700х1000</small></p>
                                         <div class="multi">
                                             <?php if(!empty($gallery)): ?>

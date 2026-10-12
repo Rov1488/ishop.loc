@@ -16,7 +16,7 @@
     <div class="row">
         <div class="col-md-12">
             <div class="box">
-                <form action="<?=ADMIN;?>user/edit" method="post" data-toggle="validator">
+                <form action="<?=ADMIN;?>/user/edit" method="post" data-toggle="validator">
                 <div class="box-body">
                     <div class="form-group has-feedback">
                         <label for="login">Логин</label>

@@ -8,6 +8,7 @@ namespace app\controllers\admin;
 use app\models\AppModel;
 use app\models\User;
 use ishop\base\Controller;
+use ishop\Cache;
 
 class AppController extends Controller{
 
@@ -19,6 +20,17 @@ class AppController extends Controller{
             redirect(ADMIN . '/user/login-admin'); //UserController::loginAdminAction
         }
         new AppModel();
+    }
+
+    //Сброс кэша после изменений в админке, чтобы сайт сразу показал новые данные
+    protected function clearCategoryCache(){
+        Cache::instance()->delete('cats');
+        Cache::instance()->delete('ishop_menu');
+    }
+
+    protected function clearFilterCache(){
+        Cache::instance()->delete('filter_group');
+        Cache::instance()->delete('filter_attrs');
     }
 
     public function getRequestID($get = true, $id = 'id'){
