@@ -48,6 +48,7 @@
 - ✅ **Обработчик ошибок.** Deprecated-сообщения из сторонних библиотек в `vendor/` не выводятся на страницу и не ломают редиректы; все ошибки пишутся в `tmp/errors.log`.
 - ✅ **Конфигурация.** Секреты вынесены в `config/params.local.php`, который `App::getParams` подмешивает к `params.php`.
 - ✅ **Git.** `tmp/` (кэш и лог ошибок) и `.idea/` (настройки PhpStorm) убраны из репозитория, папка `tmp/cache` сохраняется через `.gitkeep`.
+- ✅ **Остатки вёрстки удалены:** `luxury_watches-web/`, `public/products.html`, `public/single.html`, `config_nginx.txt`, `filters.txt`.
 - ✅ **Тестовый дубль удалён:** `addTestAction`, вид `views/admin/Product/addTest.php`, обёртка `saveOrUpdateModifications` и неиспользуемое свойство `$modification`.
 
 Осталось:
@@ -55,7 +56,6 @@
 - ⬜ Вынести общий код `addAction`/`editAction` товара (нормализация `status`/`hit`, `load → getImg → validate`) в метод модели.
 - ⬜ Перенести ядро из `vendor/ishop/core` в `core/` (папку `vendor` должен контролировать composer) и убрать `vendor/` из git (`composer install` при развёртывании).
 - ⬜ `composer.json`: зафиксировать `gabordemooij/redbean` вместо `dev-master`.
-- ⬜ Удалить остатки вёрстки: `luxury_watches-web/`, `public/products.html`, `public/single.html`, `config_nginx.txt`, `filters.txt`.
 - ⬜ Кэшировать список валют (сейчас запрос к БД на каждой странице в `AppController`).
 - ⬜ `DEBUG` вынести в `params.local.php`, чтобы на сервере не нужно было править код.
 
