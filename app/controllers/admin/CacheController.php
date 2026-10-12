@@ -6,11 +6,14 @@
 namespace app\controllers\admin;
 
 
+use app\models\admin\Product;
 use ishop\Cache;
 
 class CacheController extends AppController{
     public function indexAction(){
+        $unusedImages = count(Product::getUnusedImages());
         $this->setMeta('Очистка кэша');
+        $this->set(compact('unusedImages'));
     }
     public function deleteAction(){
         $this->requirePost();
@@ -25,6 +28,13 @@ class CacheController extends AppController{
                 $cache->delete('filter_group');
                 $cache->delete('filter_attrs');
                 break;
+            case 'images':
+                $deleted = 0;
+                foreach (Product::getUnusedImages() as $file){
+                    if (Product::deleteImage($file)) $deleted++;
+                }
+                $_SESSION['success'] = "Удалено неиспользуемых картинок: {$deleted}";
+                redirect();
         }
         $_SESSION['success'] = "Выбранный кэш удален";
         redirect();

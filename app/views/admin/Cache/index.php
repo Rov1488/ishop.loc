@@ -41,6 +41,13 @@
                                         <a class="delete" href="<?=ADMIN;?>/cache/delete?key=filter"><i class="fa fa-fw fa-close text-danger"></i></a>
                                     </td>
                                 </tr>
+                                <tr>
+                                    <td>Неиспользуемые картинки: <?=$unusedImages;?></td>
+                                    <td>Загруженные картинки в public/images, на которые не ссылается ни один товар, галерея, бренд или описание. Файлы моложе суток не учитываются</td>
+                                    <td>
+                                        <a class="delete" href="<?=ADMIN;?>/cache/delete?key=images"><i class="fa fa-fw fa-close text-danger"></i></a>
+                                    </td>
+                                </tr>
 
                             </tbody>
                         </table>

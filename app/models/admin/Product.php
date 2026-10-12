@@ -135,6 +135,51 @@ class Product extends AppModel{
          }
     }
 
+    //Загруженные через админку картинки называются 32 hex-символами (см. uploadImg).
+    //Файлы шаблона и общую заглушку no_image.jpg удаление не трогает никогда
+    const UPLOAD_PATTERN = '/^[0-9a-f]{32}\.(jpe?g|png|gif)$/';
+
+    //Используется ли картинка: товары, галерея, бренды или вставка в описание товара
+    public static function isImageUsed($file){
+        return \R::count('product', 'img = ?', [$file])
+            || \R::count('gallery', 'img = ?', [$file])
+            || \R::count('brand', 'img = ?', [$file])
+            || \R::count('product', 'content LIKE ?', ['%' . $file . '%']);
+    }
+
+    //Удаляет загруженную картинку из public/images, если на неё больше никто не ссылается
+    public static function deleteImage($file){
+        if (!is_string($file) || !preg_match(self::UPLOAD_PATTERN, $file) || self::isImageUsed($file)){
+            return false;
+        }
+        $path = WWW . '/images/' . $file;
+        return is_file($path) && unlink($path);
+    }
+
+    //Загруженные картинки, на которые никто не ссылается.
+    //Файлы моложе $minAge секунд пропускаем: их могут прямо сейчас загружать для нового товара
+    public static function getUnusedImages($minAge = 86400){
+        $used = array_flip(array_merge(
+            \R::getCol('SELECT img FROM product'),
+            \R::getCol('SELECT img FROM gallery'),
+            \R::getCol('SELECT img FROM brand'),
+            (array)($_SESSION['multi'] ?? []),
+            [$_SESSION['single'] ?? '']
+        ));
+        $content = implode(' ', \R::getCol("SELECT content FROM product WHERE content LIKE '%images/%'"));
+        $unused = [];
+        foreach (scandir(WWW . '/images') as $file){
+            if (!preg_match(self::UPLOAD_PATTERN, $file) || isset($used[$file]) || strpos($content, $file) !== false){
+                continue;
+            }
+            if (time() - filemtime(WWW . '/images/' . $file) < $minAge){
+                continue;
+            }
+            $unused[] = $file;
+        }
+        return $unused;
+    }
+
     //Отдаёт JSON-ответ загрузчику и завершает скрипт.
     //AjaxUpload читает ответ из iframe, поэтому отдаём text/html и экранируем <, >, & внутри JSON
     public static function jsonExit(array $data){
@@ -175,6 +220,10 @@ class Product extends AppModel{
             self::jsonExit(["error" => "Не удалось переместить загруженный файл."]);
         }
         if($name == 'single'){
+            // предыдущая загрузка, ещё не сохранённая в товаре, больше не нужна
+            if(!empty($_SESSION['single'])){
+                self::deleteImage($_SESSION['single']);
+            }
             $_SESSION['single'] = $new_name;
         }else{
             $_SESSION['multi'][] = $new_name;

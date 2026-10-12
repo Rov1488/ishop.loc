@@ -55,6 +55,7 @@ class ProductController extends AppController{
             $product->getImg();
             if(!$product->validate($data)){
                 $product->getErrors();
+                if (!empty($product->attributes['img'])) $_SESSION['single'] = $product->attributes['img'];
                 $_SESSION['form_data'] = $data;
                 redirect();
             }
@@ -90,9 +91,16 @@ class ProductController extends AppController{
             $product->getImg();
             if(!$product->validate($data)){
                 $product->getErrors();
+                if (!empty($product->attributes['img'])) $_SESSION['single'] = $product->attributes['img'];
                 redirect();
             }
+            $old_img = \R::getCell('SELECT img FROM product WHERE id = ?', [$id]);
+            $new_img = $product->attributes['img'] ?? null;
             if ($product->update('product', $id)){
+                // главную картинку заменили — старый файл больше не нужен
+                if ($new_img && $new_img !== $old_img){
+                    Product::deleteImage($old_img);
+                }
                 $product->editFilter($id, $data);
                 $product->editRelatedProduct($id, $data);
                 $product->saveGallery($id);
@@ -168,7 +176,7 @@ class ProductController extends AppController{
             return;
         }
         if (\R::exec("DELETE FROM gallery WHERE product_id = ? AND img = ?", [$id, $src])){
-            @unlink(WWW . "/images/$src");
+            Product::deleteImage($src);
             exit('1');
         }
         return;
@@ -181,18 +189,19 @@ class ProductController extends AppController{
     public function deleteAction(){
         $this->requirePost();
         $id = $this->getRequestID();
+        // картинки запоминаем до удаления записей, а файлы удаляем после — когда на них уже никто не ссылается
+        $images = array_merge(
+            \R::getCol('SELECT img FROM product WHERE id = ?', [$id]),
+            \R::getCol('SELECT img FROM gallery WHERE product_id = ?', [$id])
+        );
         \R::exec("DELETE FROM product WHERE id = ? ", [$id]);
-        \R::exec("DELETE FROM related_product WHERE product_id = ? ", [$id]);
+        \R::exec("DELETE FROM related_product WHERE product_id = ? OR related_id = ?", [$id, $id]);
         \R::exec("DELETE FROM attribute_product WHERE product_id = ? ", [$id]);
         \R::exec("DELETE FROM modification WHERE product_id = ? ", [$id]);
-        $gallery = \R::getAll('SELECT img FROM gallery WHERE product_id = ?', [$id]);
-        if (!empty($gallery)){
-            foreach ($gallery as $item){
-                @unlink(WWW . '/images/' . $item['img']);
-            }
-        }
-
         \R::exec("DELETE FROM gallery WHERE product_id = ?", [$id]);
+        foreach ($images as $img){
+            Product::deleteImage($img); // заглушку no_image.jpg и общие картинки не удалит
+        }
 
         $_SESSION['success'] = 'Товар и связонный все товары успешно удалены';
         redirect(ADMIN . '/product');
