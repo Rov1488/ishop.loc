@@ -78,39 +78,6 @@ class ProductController extends AppController{
     }
 
 
-    public function addTestAction(){
-        if(!empty($_POST)){
-            $product = new Product();
-            $data = $_POST;
-            $product->load($data);
-            $product->attributes['status'] = !empty($product->attributes['status']) ? 1 : 0;
-            $product->attributes['hit'] = !empty($product->attributes['hit']) ? 1 : 0;
-            $product->getImg();
-            if(!$product->validate($data)){
-                $product->getErrors();
-                $_SESSION['form_data'] = $data;
-                redirect();
-            }
-
-            if($id = $product->save('product')){
-                $product->saveGallery($id);
-                $alias = AppModel::createAlias('product', 'alias', $data['title'], $id);
-                $p = \R::load('product', $id);
-                $p->alias = $alias;
-                \R::store($p);
-                $product->editFilter($id, $data);
-                $product->editRelatedProduct($id, $data);
-                $product->saveOrUpdateModifications($id, $data);
-
-                $_SESSION['success'] = 'Товар добавлен';
-            }
-            redirect();
-        }
-
-        $this->setMeta('Новый товар');
-    }
-
-
     //Метод для редактирования товаров
     public function editAction(){
         if(!empty($_POST)){

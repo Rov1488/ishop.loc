@@ -34,13 +34,6 @@ class Product extends AppModel{
         ],
     ];
 
-  public $modification = [
-        [
-            'title' => '',
-            'price' => '',
-        ]
-    ];
-
     //Метод для записи мофификаторов
     public function editModificationProduct($id, $data){
         $modifications = [];
@@ -93,12 +86,6 @@ class Product extends AppModel{
             );
         }
     }
-
-    // CHatGPT метод для записи модификаторов товара
-    public function saveOrUpdateModifications($id, array $data) {
-        $this->editModificationProduct($id, $data);
-    }
-
 
     //метод для свянанных товаров
     public function editRelatedProduct($id, $data){
