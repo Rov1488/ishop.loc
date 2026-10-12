@@ -11,8 +11,8 @@ unset($local_params);
 define("ROOT", dirname(__DIR__)); // путь к корьню папки сайта
 define("WWW", ROOT . '/public'); //указываем к папке public
 define("APP", ROOT . '/app'); //указываем к папке app
-define("CORE", ROOT . '/vendor/ishop/core');//указываем к ядру сайта core
-define("LIBS", ROOT . '/vendor/ishop/core/libs');//указываем к папке libs
+define("CORE", ROOT . '/core');//указываем к ядру сайта core
+define("LIBS", ROOT . '/core/libs');//указываем к папке libs
 define("CACHE", ROOT . '/tmp/cache');//указываем к папке cache
 define("CONF", ROOT . '/config');//указываем к папке config
 define("LAYOUT", 'watches'); //константа для подключения шаблона сайта

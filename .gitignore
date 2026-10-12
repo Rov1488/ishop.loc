@@ -4,3 +4,4 @@
 !/tmp/cache/.gitkeep
 config/params.local.php
 .idea/
+/vendor/

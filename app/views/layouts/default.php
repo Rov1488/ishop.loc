@@ -20,7 +20,8 @@ $logs = \R::getDatabaseAdapter()
     ->getDatabase()
     ->getLogger();
 
-debug( $logs->grep( 'SELECT' ) );
+// журнал SQL есть только в режиме отладки (R::debug включается в Db при DEBUG)
+if (DEBUG && $logs) debug( $logs->grep( 'SELECT' ) );
 
 
 ?>
