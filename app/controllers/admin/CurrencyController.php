@@ -28,6 +28,7 @@ class CurrencyController extends AppController{
                 redirect();
             }
             if($currency->save('currency')){
+                $this->clearCurrencyCache();
                 $_SESSION['success'] = 'Валюта добавлена';
                 redirect();
             }
@@ -48,6 +49,7 @@ class CurrencyController extends AppController{
                 redirect();
             }
             if($currency->update('currency', $id)){
+                $this->clearCurrencyCache();
                 $_SESSION['success'] = "Изменения сохранены";
                 redirect();
             }
@@ -65,6 +67,7 @@ class CurrencyController extends AppController{
         $id = $this->getRequestID();
         $currency = \R::load('currency', $id);
         \R::trash($currency);
+        $this->clearCurrencyCache();
         $_SESSION['success'] = "Валюта успешно удалено";
         redirect();
     }

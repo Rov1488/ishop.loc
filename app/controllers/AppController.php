@@ -18,7 +18,7 @@ class AppController extends Controller {
     {
         parent::__construct($route);
         new AppModel();
-        App::$app->setProperty('currencies', Currency::getCurrencies());
+        App::$app->setProperty('currencies', self::cacheCurrencies());
         App::$app->setProperty('currency', Currency::getCurrency(App::$app->getProperty('currencies')));
 
         App::$app->setProperty('cats', self::cacheCategory());
@@ -35,6 +35,18 @@ class AppController extends Controller {
         }
         return $cats;
 
+    }
+
+    //Список валют нужен на каждой странице, поэтому берём его из кеша.
+    //Админка сбрасывает кеш 'currencies' при изменении валют
+    public static function cacheCurrencies(){
+        $cache = Cache::instance();
+        $currencies = $cache->get('currencies');
+        if(!$currencies){
+            $currencies = Currency::getCurrencies();
+            $cache->set('currencies', $currencies);
+        }
+        return $currencies;
     }
 
 

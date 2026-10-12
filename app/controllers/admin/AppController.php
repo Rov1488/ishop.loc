@@ -33,6 +33,10 @@ class AppController extends Controller{
         Cache::instance()->delete('filter_attrs');
     }
 
+    protected function clearCurrencyCache(){
+        Cache::instance()->delete('currencies');
+    }
+
     //Действия, меняющие данные (удаление, смена статуса), принимаем только через POST:
     //тогда их защищает CSRF-токен, который App проверяет у каждого POST-запроса
     protected function requirePost(){
