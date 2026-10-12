@@ -1,7 +1,7 @@
 <div class="nav-tabs-custom" id="filter">
     <ul class="nav nav-tabs">
         <?php $i = 1; foreach($this->groups as $group_id => $group_item): ?>
-            <li<?php if($i == 1) echo ' class="active"' ?>><a href="#tab_<?= $group_id ?>" data-toggle="tab" aria-expanded="true"><?= $group_item ?></a></li>
+            <li<?php if($i == 1) echo ' class="active"' ?>><a href="#tab_<?= $group_id ?>" data-toggle="tab" aria-expanded="true"><?=h($group_item);?></a></li>
             <?php $i++; endforeach; ?>
         <li class="pull-right">
             <a href="#" id="reset-filter">Сброс</a>
@@ -21,7 +21,7 @@
                         ?>
                         <div class="form-group">
                             <label>
-                                <input type="radio" name="attrs[<?= $group_id ?>]" value="<?= $attr_id ?>"<?= $checked ?>> <?= $value; ?>
+                                <input type="radio" name="attrs[<?= $group_id ?>]" value="<?= $attr_id ?>"<?= $checked ?>> <?=h($value);?>
                             </label>
                         </div>
                         <?php $i++; endforeach; ?>

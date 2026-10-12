@@ -1,7 +1,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        Редактирование товара <?=$product->title;?>
+        Редактирование товара <?=h($product->title);?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="<?=ADMIN;?>"><i class="fa fa-dashboard"></i> Главная</a></li>
@@ -83,7 +83,7 @@
                             <select name="related[]" class="form-control select2" id="related" multiple>
                                 <?php if(!empty($related_product)): ?>
                                     <?php foreach($related_product as $item): ?>
-                                        <option value="<?=$item['related_id'];?>" selected><?=$item['title'];?></option>
+                                        <option value="<?=$item['related_id'];?>" selected><?=h($item['title']);?></option>
                                     <?php endforeach; ?>
                                 <?php endif; ?>
                             </select>

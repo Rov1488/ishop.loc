@@ -33,9 +33,9 @@
                                 <?php $class = $user['status'] ? 'success' : ''; ?>
                                 <tr class="<?=$class;?>">
                                     <td><?=$user->id;?></td>
-                                    <td><?=$user->login;?></td>
-                                    <td><?=$user->email;?></td>
-                                    <td><?=$user->name;?></td>
+                                    <td><?=h($user->login);?></td>
+                                    <td><?=h($user->email);?></td>
+                                    <td><?=h($user->name);?></td>
                                     <td><?=$user->role;?></td>
                                     <td><a href="<?=ADMIN;?>/user/edit?id=<?=$user->id;?>"><i class="fa fa-fw fa-eye"></i></a>
                                         <a class="delete" href="<?=ADMIN;?>/user/delete?id=<?=$user->id;?>"><i class="fa fa-fw fa-close text-danger"></i></a>

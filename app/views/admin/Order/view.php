@@ -49,7 +49,7 @@
                             </tr>
                             <tr>
                                 <td>Имя заказчика</td>
-                                <td><?=$order['name'];?></td>
+                                <td><?=h($order['name']);?></td>
                             </tr>
                             <tr>
                                 <td>Статус</td>
@@ -57,7 +57,7 @@
                             </tr>
                             <tr>
                                 <td>Комментарий</td>
-                                <td><?=$order['note'];?></td>
+                                <td><?=h($order['note']);?></td>
                             </tr>
                             </tbody>
                         </table>
@@ -82,7 +82,7 @@
                             <?php $qty = 0; foreach($order_products as $product): ?>
                                 <tr>
                                     <td><?=$product->id;?></td>
-                                    <td><?=$product->title;?></td>
+                                    <td><?=h($product->title);?></td>
                                     <td><?=$product->qty; $qty += $product->qty?></td>
                                     <td><?=$product->price;?></td>
                                 </tr>

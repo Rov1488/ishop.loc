@@ -15,11 +15,11 @@ class Breadcrumbs{
         $breadcrumbs = "<li><a href='". PATH ."'>Home</a></li>";
         if($breadcrumbs_array){
             foreach ($breadcrumbs_array as $alias => $title){
-                $breadcrumbs .= "<li><a href='". PATH ."/category/{$alias}'>{$title}</a> </li>";
+                $breadcrumbs .= "<li><a href='". PATH ."/category/" . h($alias) . "'>" . h($title) . "</a> </li>";
             }
         }
         if ($name){
-            $breadcrumbs .= "<li>$name</li>";
+            $breadcrumbs .= "<li>" . h($name) . "</li>";
         }
 
         return $breadcrumbs;

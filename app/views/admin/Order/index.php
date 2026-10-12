@@ -34,7 +34,7 @@
                            <?php $class = $order['status'] ? 'success' : ''; ?>
                                 <tr class="<?=$class;?>">
                                     <td><?=$order['id'];?></td>
-                                    <td><?=$order['name'];?></td>
+                                    <td><?=h($order['name']);?></td>
                                     <td><?=$order['status'] ? 'Завершен' : 'Новый';?></td>
                                     <td><?=$order['sum'];?> <?=$order['currency'];?></td>
                                     <td><?=$order['date'];?></td>

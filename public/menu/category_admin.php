@@ -8,7 +8,7 @@ if (!$parent){
 ?>
 
 <p class="item-p">
-     <a class="list-group-item" href="<?=ADMIN;?>/category/edit?id=<?=$id;?>"><?=$category['title'];?></a><span> <?=$delete;?></span>
+     <a class="list-group-item" href="<?=ADMIN;?>/category/edit?id=<?=$id;?>"><?=h($category['title']);?></a><span> <?=$delete;?></span>
 </p>
 <?php if ($parent): ?>
     <div class="list-group">

@@ -32,8 +32,8 @@
                             <?php foreach ($products as $product): ?>
                                 <tr>
                                     <td><?=$product['id'];?></td>
-                                    <td><?=$product['cat'];?></td>
-                                    <td><?=$product['title'];?></td>
+                                    <td><?=h($product['cat']);?></td>
+                                    <td><?=h($product['title']);?></td>
                                     <td><?=$product['price'];?></td>
                                     <td><?=$product['status'] ? 'On' : 'OFF';?></td>
                                     <td><a href="<?=ADMIN;?>/product/edit?id=<?=$product['id'];?>"><i class="fa fa-fw fa-eye"></i></a>

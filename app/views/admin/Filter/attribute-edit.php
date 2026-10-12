@@ -28,7 +28,7 @@
                             <label for="category_id">Группа</label>
                             <select name="attr_group_id" id="category_id" class="form-control">
                                 <?php foreach ($attrs_group as $item): ?>
-                                    <option value="<?=$item->id;?>" <?php if ($item->id == $attr->attr_group_id) echo 'selected';?>><?=$item->title;?></option>
+                                    <option value="<?=$item->id;?>" <?php if ($item->id == $attr->attr_group_id) echo 'selected';?>><?=h($item->title);?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>

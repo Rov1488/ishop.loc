@@ -75,7 +75,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                         <div class="total">
                             <img src="images/cart-1.png" alt="" />
                             <?php if (!empty($_SESSION['cart'])): ?>
-                                <span class="simpleCart_total"><?=$_SESSION['cart.currency']['symbol_left'] . $_SESSION['cart.sum'] . $_SESSION['cart.currency']['symbol_right'];?></span>
+                                <span class="simpleCart_total"><?=h($_SESSION['cart.currency']['symbol_left'] . $_SESSION['cart.sum'] . $_SESSION['cart.currency']['symbol_right']);?></span>
 
                             <?php else: ?>
                                 <span class="simpleCart_total">Empty Cart</span>
@@ -254,9 +254,10 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <?php $curr = \ishop\App::$app->getProperty('currency'); ?>
 <script>
     var path = '<?=PATH;?>',
-        course = '<?=$curr['value'];?>',
-        symboleLeft = '<?=$curr['symbol_left'];?>',
-        symboleRight = '<?=$curr['symbol_right'];?>';
+        // json_encode даёт безопасную JS-строку (кавычки и теги экранируются)
+        course = <?=json_encode($curr['value'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);?>,
+        symboleLeft = <?=json_encode($curr['symbol_left'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);?>,
+        symboleRight = <?=json_encode($curr['symbol_right'], JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP | JSON_UNESCAPED_UNICODE);?>;
 
 
 </script>

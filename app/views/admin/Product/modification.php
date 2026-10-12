@@ -253,7 +253,7 @@ function removeDriver(block){
 
                 <div id="collapse<?=$n;?>" class="form-group panel-collapse collapse">
                     <label for="mod-title">Наименование модификатора</label>
-                    <p><input type="text" name="mod-title[<?=$n;?>]" class="form-control" id="mod-title" data-name="mod-title" placeholder="Наименование модификатора" value="<?=$item['title'];?>"></p>
+                    <p><input type="text" name="mod-title[<?=$n;?>]" class="form-control" id="mod-title" data-name="mod-title" placeholder="Наименование модификатора" value="<?=h($item['title']);?>"></p>
                     <label for="mod-price">Цена</label>
                     <p><input type="text" name="mod-price[<?=$n;?>]" class="form-control" id="mod-price" data-name="mod-price" placeholder="Цена" pattern="^[0-9.]{1,}$" value="<?=$item['price'];?>"></p>
                     <input type="hidden" name="id" id="values" data-id="mod-id" value="<?=$id;?>">

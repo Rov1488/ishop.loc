@@ -1,7 +1,7 @@
 <!-- Content Header (Page header) -->
 <section class="content-header">
     <h1>
-        Редактирование валюты <?= $currency->title ?>
+        Редактирование валюты <?=h($currency->title);?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="<?= ADMIN ?>/"><i class="fa fa-dashboard"></i> Главная</a></li>
@@ -36,7 +36,7 @@
                         </div>
                         <div class="form-group has-feedback">
                             <label for="value">Значение</label>
-                            <input type="text" name="value" class="form-control" id="value" placeholder="Значение" pattern="^[0-9.]{1,}$" required data-error="Допускаются цифры и десятичная точка" value="<?= $currency->value ?>">
+                            <input type="text" name="value" class="form-control" id="value" placeholder="Значение" pattern="^[0-9.]{1,}$" required data-error="Допускаются цифры и десятичная точка" value="<?=h($currency->value);?>">
                             <div class="help-block with-errors"></div>
                         </div>
                         <div class="form-group">

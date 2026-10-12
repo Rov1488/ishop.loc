@@ -31,9 +31,9 @@
                             <?php foreach ($currencies as $currency): ?>
                                 <tr>
                                     <td><?=$currency->id;?></td>
-                                    <td><?=$currency->title;?></td>
-                                    <td><?=$currency->code;?></td>
-                                    <td><?=$currency->value;?></td>
+                                    <td><?=h($currency->title);?></td>
+                                    <td><?=h($currency->code);?></td>
+                                    <td><?=h($currency->value);?></td>
                                     <td>
                                         <a href="<?=ADMIN;?>/currency/edit?id=<?=$currency->id;?>"><i class="fa fa-fw fa-pencil"></i></a>
                                         <a class="delete" href="<?=ADMIN;?>/currency/delete?id=<?=$currency->id;?>"><i class="fa fa-fw fa-close text-danger"></i></a>

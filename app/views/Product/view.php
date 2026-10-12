@@ -46,7 +46,7 @@
                     ?>
                     <div class="col-md-7 single-top-right">
                         <div class="single-para simpleCart_shelfItem">
-                            <h2><?=$product->title;?></h2>
+                            <h2><?=h($product->title);?></h2>
                             <div class="star-on">
                                 <ul class="star-footer">
                                     <li><a href="#"><i> </i></a></li>
@@ -62,10 +62,10 @@
                                 <div class="clearfix"> </div>
                             </div>
 
-                            <h5 class="item_price" id="base-price" data-base="<?=$product->price * $curr['value']; ?>"><?=$curr['symbol_left']?> <?=$product->price * $curr['value']; ?><?=$curr['symbol_right'];?></h5>
+                            <h5 class="item_price" id="base-price" data-base="<?=$product->price * $curr['value']; ?>"><?=h($curr['symbol_left']);?> <?=$product->price * $curr['value']; ?><?=h($curr['symbol_right']);?></h5>
                             <?php if($product->old_price):  ?>
 
-                                <del><?=$curr['symbol_left'];?><?=$product->old_price * $curr['value']; ?><?=$curr['symbol_right'];?></del>
+                                <del><?=h($curr['symbol_left']);?><?=$product->old_price * $curr['value']; ?><?=h($curr['symbol_right']);?></del>
 
                             <?php endif;  ?>
 
@@ -80,7 +80,7 @@
                                             <option>Выбрать цвет</option>
                                             <?php foreach ($mods as $mod): ?>
 
-                                            <option data-title="<?=$mod->title;?>" data-price="<?=$mod->price * $curr['value'];?>" value="<?=$mod->id;?>"><?=$mod->title;?></option>
+                                            <option data-title="<?=h($mod->title);?>" data-price="<?=$mod->price * $curr['value'];?>" value="<?=$mod->id;?>"><?=h($mod->title);?></option>
 
                                             <?php endforeach; ?>
 
@@ -99,7 +99,7 @@
                             <?php endif; ?>
                             <ul class="tag-men">
                                 <li><span>Category</span>
-                                    <span>: <a href="category/<?=$cats[$product->category_id]['alias'];?>"><?=$cats[$product->category_id]['title'];?></a> </span></li>
+                                    <span>: <a href="category/<?=$cats[$product->category_id]['alias'];?>"><?=h($cats[$product->category_id]['title']);?></a> </span></li>
 
                             </ul>
                             <div class="quantity">
@@ -157,17 +157,17 @@
                             <div class="product-main simpleCart_shelfItem">
                                 <a href="product/<?=$item['alias'];?>" class="mask"><img class="img-responsive zoom-img" src="images/<?=$item['img'];?>" alt="" /></a>
                                 <div class="product-bottom">
-                                    <h3><a href="product/<?=$item['alias'];?>"><?=$item['title'];?></a></h3>
+                                    <h3><a href="product/<?=$item['alias'];?>"><?=h($item['title']);?></a></h3>
                                     <p>Explore Now</p>
                                     <h4>
                                         <a class="item_add add-to-cart-link" href="cart/add?id=<?=$item['id'];?>" data-id="<?=$item['id'];?>"><i></i></a>
                                         <span class=" item_price">
-                                            <?=$curr['symbol_left']?> <?=$item['price'] * $curr['value']; ?><?=$curr['symbol_right'];?>
+                                            <?=h($curr['symbol_left']);?> <?=$item['price'] * $curr['value']; ?><?=h($curr['symbol_right']);?>
                                         </span>
 
                                         <?php if($item['old_price']):  ?>
 
-                                            <del><?=$curr['symbol_left'];?><?=$item['old_price'] * $curr['value']; ?><?=$curr['symbol_right'];?></del>
+                                            <del><?=h($curr['symbol_left']);?><?=$item['old_price'] * $curr['value']; ?><?=h($curr['symbol_right']);?></del>
 
                                         <?php endif;  ?>
 
@@ -193,17 +193,17 @@
                                     <div class="product-main simpleCart_shelfItem">
                                         <a href="product/<?=$item['alias'];?>" class="mask"><img class="img-responsive zoom-img" src="images/<?=$item['img'];?>" alt="" /></a>
                                         <div class="product-bottom">
-                                            <h3><a href="product/<?=$item['alias'];?>"><?=$item['title'];?></a></h3>
+                                            <h3><a href="product/<?=$item['alias'];?>"><?=h($item['title']);?></a></h3>
                                             <p>Explore Now</p>
                                             <h4>
                                                 <a class="item_add add-to-cart-link" href="cart/add?id=<?=$item['id'];?>" data-id="<?=$item['id'];?>"><i></i></a>
                                                 <span class=" item_price">
-                                            <?=$curr['symbol_left']?> <?=$item['price'] * $curr['value']; ?><?=$curr['symbol_right'];?>
+                                            <?=h($curr['symbol_left']);?> <?=$item['price'] * $curr['value']; ?><?=h($curr['symbol_right']);?>
                                         </span>
 
                                                 <?php if($item['old_price']):  ?>
 
-                                                    <del><?=$curr['symbol_left'];?><?=$item['old_price'] * $curr['value']; ?><?=$curr['symbol_right'];?></del>
+                                                    <del><?=h($curr['symbol_left']);?><?=$item['old_price'] * $curr['value']; ?><?=h($curr['symbol_right']);?></del>
 
                                                 <?php endif;  ?>
 

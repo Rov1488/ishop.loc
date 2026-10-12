@@ -31,7 +31,7 @@
                 <figure class="effect-bubba">
                     <img class="img-responsive" src="images/<?=$brand->img;?>" alt=""/>
                     <figcaption>
-                        <h2><?=$brand->title;?></h2>
+                        <h2><?=h($brand->title);?></h2>
                         <p><?=$brand->description;?></p>
                     </figcaption>
                 </figure>
@@ -60,14 +60,14 @@
                     <div class="product-main simpleCart_shelfItem">
                         <a href="product/<?=$hit->alias; ?>" class="mask"><img class="img-responsive zoom-img" src="images/<?=$hit->img; ?>" alt="" /></a>
                         <div class="product-bottom">
-                            <h3><a href="product/<?=$hit->alias; ?>" class="mask"><?=$hit->title; ?></a></h3>
+                            <h3><a href="product/<?=$hit->alias; ?>" class="mask"><?=h($hit->title);?></a></h3>
                             <p>Explore Now</p>
                             <h4>
-                                <a data-id="<?=$hit->id; ?>" class="add-to-cart-link" href="cart/add?id=<?=$hit->id; ?>"><i></i></a> <span class=" item_price"><?=$curr['symbol_left'];?><?=$hit->price * $curr['value']; ?><?=$curr['symbol_right'];?></span>
+                                <a data-id="<?=$hit->id; ?>" class="add-to-cart-link" href="cart/add?id=<?=$hit->id; ?>"><i></i></a> <span class=" item_price"><?=h($curr['symbol_left']);?><?=$hit->price * $curr['value']; ?><?=h($curr['symbol_right']);?></span>
 
                                 <?php if($hit->old_price):  ?>
 
-                                <small><del><?=$curr['symbol_left'];?><?=$hit->old_price * $curr['value']; ?><?=$curr['symbol_right'];?></del></small>
+                                <small><del><?=h($curr['symbol_left']);?><?=$hit->old_price * $curr['value']; ?><?=h($curr['symbol_right']);?></del></small>
 
                                 <?php endif;  ?>
 

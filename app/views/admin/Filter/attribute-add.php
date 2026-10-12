@@ -29,7 +29,7 @@
                             <select name="attr_group_id" id="category_id" class="form-control">
                                 <option>Выберите группу</option>
                                 <?php foreach ($group as $item): ?>
-                                    <option value="<?=$item->id;?>"><?=$item->title;?></option>
+                                    <option value="<?=$item->id;?>"><?=h($item->title);?></option>
                                 <?php endforeach; ?>
                             </select>
                         </div>

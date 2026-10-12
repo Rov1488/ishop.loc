@@ -14,7 +14,7 @@
             <?php foreach($_SESSION['cart'] as $id => $item): ?>
                 <tr>
                     <td><a href="product/<?=$item['alias'];?>"><img src="images/<?=$item['img'];?>" alt=""></a></td>
-                    <td><a href="product/<?=$item['alias'];?>"><?=$item['title'];?></td>
+                    <td><a href="product/<?=$item['alias'];?>"><?=h($item['title']);?></td>
                     <td><?=$item['qty'];?></td>
                     <td><?=$item['price'];?></td>
                     <td><span data-id="<?=$id;?>" class="glyphicon glyphicon-remove text-danger del-item" aria-hidden="true"></span></td>
@@ -26,7 +26,7 @@
             </tr>
             <tr>
                 <td>На сумму:</td>
-                <td colspan="4" class="text-right cart-sum"><?= $_SESSION['cart.currency']['symbol_left'] . $_SESSION['cart.sum'] . $_SESSION['cart.currency']['symbol_right'];?></td>
+                <td colspan="4" class="text-right cart-sum"><?=h($_SESSION['cart.currency']['symbol_left'] . $_SESSION['cart.sum'] . $_SESSION['cart.currency']['symbol_right']);?></td>
             </tr>
             </tbody>
         </table>
